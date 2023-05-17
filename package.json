@@ -1,7 +1,7 @@
 {
-    "name": "skeleton",
+    "name": "pamtechoga",
     "version": "1.1.0",
-    "description": "[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug) [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/run-tests?label=tests)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain) [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/:vendor_slug/:package_slug/Check%20&%20fix%20styling?label=code%20style)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A\"Check+%26+fix+styling\"+branch%3Amain) [![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)",
+    "description": "[![Latest Version on Packagist](https://img.shields.io/packagist/v/vibraniuum/pamtechoga.svg?style=flat-square)](https://packagist.org/packages/vibraniuum/pamtechoga) [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/vibraniuum/pamtechoga/run-tests?label=tests)](https://github.com/vibraniuum/pamtechoga/actions?query=workflow%3Arun-tests+branch%3Amain) [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/vibraniuum/pamtechoga/Check%20&%20fix%20styling?label=code%20style)](https://github.com/vibraniuum/pamtechoga/actions?query=workflow%3A\"Check+%26+fix+styling\"+branch%3Amain) [![Total Downloads](https://img.shields.io/packagist/dt/vibraniuum/pamtechoga.svg?style=flat-square)](https://packagist.org/packages/vibraniuum/pamtechoga)",
     "directories": {
         "test": "tests"
     },
@@ -14,16 +14,16 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/astrogoat/skeleton.git"
+        "url": "git+https://github.com/astrogoat/pamtechoga.git"
     },
     "keywords": [
         "strata",
-        "skeleton"
+        "pamtechoga"
     ],
-    "author": ":author_name",
+    "author": "OniiCoder",
     "license": "UNLICENSED",
     "bugs": {
-        "url": "https://github.com/astrogoat/skeleton/issues"
+        "url": "https://github.com/astrogoat/pamtechoga/issues"
     },
-    "homepage": "https://github.com/astrogoat/skeleton#readme"
+    "homepage": "https://github.com/astrogoat/pamtechoga#readme"
 }

@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Vibraniuum\Pamtechoga\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class PamtechogaCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'pamtechoga';
 
     public $description = 'My command';
 

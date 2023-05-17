@@ -1,14 +1,14 @@
 <?php
 
-namespace VendorName\Skeleton\Actions;
+namespace Vibraniuum\Pamtechoga\Actions;
 
 use Helix\Lego\Apps\Actions\Action;
 
-class SkeletonAction extends Action
+class PamtechogaAction extends Action
 {
     public static function actionName(): string
     {
-        return 'Skeleton action name';
+        return 'Pamtechoga action name';
     }
 
     public static function run(): mixed
