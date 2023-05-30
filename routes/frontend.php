@@ -1,3 +1,6 @@
 <?php
+use Illuminate\Support\Facades\Route;
 
-// Here you can add routes for the frontend.
+Route::get('/docs', function () {
+    return view('scribe.index');
+});
