@@ -94,4 +94,9 @@ class Organization extends LegoModel implements Mediable, Searchable
     {
         return $this->hasMany(Order::class, 'organization_id', 'id');
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'organization_id', 'id');
+    }
 }

@@ -10,13 +10,14 @@ use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
+use Vibraniuum\Pamtechoga\Models\Payment;
 
 /**
  * @group Order management
  *
  * APIs for managing orders
  */
-class OrderController extends Controller
+class PaymentController extends Controller
 {
     /**
      * Display the specified resource.
@@ -31,11 +32,11 @@ class OrderController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $orders = Order::where('organization_id', $organization->id)->with('product', 'organization', 'branch', 'driver')->paginate(20);
+        $payments = Payment::where('organization_id', $organization->id)->with('organization')->paginate(20);
 
         return response()->json([
             'status' => true,
-            'data' => $orders,
+            'data' => $payments,
         ]);
     }
 
@@ -73,9 +74,9 @@ class OrderController extends Controller
     {
         try {
             $validateData = Validator::make($request->all(),
-            [
-                'address' => 'nullable',
-            ]);
+                [
+                    'address' => 'nullable',
+                ]);
 
             if($validateData->fails()){
                 return response()->json([

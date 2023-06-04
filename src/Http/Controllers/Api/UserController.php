@@ -108,7 +108,7 @@ class UserController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => "User Updated successfully!",
-                'user' => $user
+                'data' => $user
             ], 200);
 
         } catch (\Throwable $th) {
