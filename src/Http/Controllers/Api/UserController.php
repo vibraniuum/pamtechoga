@@ -66,11 +66,14 @@ class UserController extends Controller
         $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
 
         $user = collect($organizationUser?->user)->except(['deleted_at', 'email_verified_at']);
-        $user['organization'] = $organizationUser?->organization;
+
+        $organization = $organizationUser?->organization;
+        $branches = $organization->branches;
 
         return response()->json([
             'status' => true,
-            'user' => $organizationUser?->user ? $user : null,
+            'data' => $organizationUser?->user ? $user : null,
+            'organization' => $organizationUser?->organization
         ]);
     }
 
