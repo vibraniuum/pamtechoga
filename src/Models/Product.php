@@ -13,6 +13,10 @@ class Product extends LegoModel implements Searchable
 
     protected $table = 'pamtechoga_products';
 
+    protected $casts = [
+        "instock" => "boolean"
+    ];
+
     public static function icon(): string
     {
         return Icon::COLLECTION;

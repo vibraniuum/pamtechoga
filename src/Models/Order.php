@@ -6,11 +6,16 @@ use Helix\Fabrick\Icon;
 use Helix\Lego\Models\Contracts\Searchable;
 use Helix\Lego\Models\Model as LegoModel;
 use Illuminate\Support\Str;
+use PhpParser\Node\Expr\Cast\Double;
 
 class Order extends LegoModel implements Searchable
 {
 
     protected $table = 'pamtechoga_customer_orders';
+
+    protected $casts = [
+        "made_down_payment" => "boolean"
+    ];
 
     public static function icon(): string
     {
