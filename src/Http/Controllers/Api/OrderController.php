@@ -31,7 +31,7 @@ class OrderController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $orders = Order::where('organization_id', $organization->id)->with('product', 'organization', 'branch', 'driver', 'driver.truck')->paginate(20);
+        $orders = Order::where('organization_id', $organization->id)->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(20);
 
         return response()->json([
             'status' => true,
@@ -60,6 +60,55 @@ class OrderController extends Controller
             'status' => true,
             'organization' => $organization
         ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        try {
+            $validateData = Validator::make($request->all(),
+            [
+                'product_id' => 'required',
+                'branch_id' => 'required',
+                'volume' => 'required',
+                'unit_price' => 'required',
+            ]);
+
+            if($validateData->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateData->errors()
+                ], 401);
+            }
+
+            $user = auth()->user();
+
+            $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
+
+            $organization = $organizationUser->organization;
+            $request['organization_id'] = $organization->id;
+
+            $order = Order::create($request->all());
+            $order = Order::where('id', $order->id)->first();
+
+            return response()->json([
+                'status' => true,
+                'message' => "Order created successfully!",
+                'data' => $order
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
