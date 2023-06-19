@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Vibraniuum\Pamtechoga\Models\FuelPrice;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
@@ -54,6 +55,21 @@ class DashboardController extends Controller
                 "total_orders" => $orders,
                 "order_breakdown_by_product" => $ordersBreakDownByProduct
             ],
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return JsonResponse
+     */
+    public function fuelPrices(): JsonResponse
+    {
+        $fuelPrices = FuelPrice::paginate(20);
+
+        return response()->json([
+            'status' => true,
+            'data' => $fuelPrices,
         ]);
     }
 }

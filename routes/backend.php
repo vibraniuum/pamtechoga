@@ -14,6 +14,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\DepotsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DriversForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DriversIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersForm;
@@ -151,6 +153,16 @@ Route::group([
         Route::get('/', PaymentsIndex::class)->name('index');
         Route::get('/create', PaymentsForm::class)->name('create');
         Route::get('/{payment}/edit', PaymentsForm::class)->name('edit');
+    });
+
+    // FUEL PRICES
+    Route::group([
+        'as' => 'fuel-prices.',
+        'prefix' => 'fuel-prices/'
+    ], function() {
+        Route::get('/', FuelPricesIndex::class)->name('index');
+        Route::get('/create', FuelPricesForm::class)->name('create');
+        Route::get('/{fuelPrice}/edit', FuelPricesForm::class)->name('edit');
     });
 
 });

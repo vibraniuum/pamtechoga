@@ -31,6 +31,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\DepotsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DriversForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DriversIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersForm;
@@ -117,12 +119,12 @@ class PamtechogaServiceProvider extends PackageServiceProvider
                         Icon::FOLDER_OPEN
                     )->after('Organizations')
                 );
-//                $menu->addToSection(
-//                    Menu::MAIN_SECTIONS['PRIMARY'],
-//                    Link::to(route('lego.pamtechoga.products.index'), 'Products')
-//                        ->icon(Icon::TRUCK)
-//                        ->after('Models')
-//                );
+                $menu->addToSection(
+                    Menu::MAIN_SECTIONS['PRIMARY'],
+                    Link::to(route('lego.pamtechoga.fuel-prices.index'), 'Fuel Prices')
+                        ->icon(Icon::FOLDER_OPEN)
+                        ->after('Models')
+                );
             })
             ->backendRoutes(__DIR__.'/../routes/backend.php')
             ->apiRoutes(__DIR__.'/../routes/api.php')
@@ -176,5 +178,7 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-old-driver-trips-form', OldDriverTripsForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-payments-index', PaymentsIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-payments-form', PaymentsForm::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-fuel-prices-index', FuelPricesIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-fuel-prices-form', FuelPricesForm::class);
     }
 }

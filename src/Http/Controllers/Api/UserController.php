@@ -19,11 +19,17 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
+        $user = auth()->user();
+
+        $userOrganization = OrganizationUser::where('user_id', $user->id)->first();
+
+        $organization = $userOrganization->organization;
+
+        $usersBelongingToMyOrganization = OrganizationUser::where('organization_id', $organization->id)->get();
 
         return response()->json([
             'status' => true,
-            'users' => $users
+            'users' => $usersBelongingToMyOrganization
         ]);
     }
 
