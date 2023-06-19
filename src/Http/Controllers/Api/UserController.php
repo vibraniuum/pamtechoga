@@ -25,7 +25,7 @@ class UserController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $usersBelongingToMyOrganization = OrganizationUser::where('organization_id', $organization->id)->get();
+        $usersBelongingToMyOrganization = OrganizationUser::where('organization_id', $organization->id)->with('user')->get();
 
         return response()->json([
             'status' => true,

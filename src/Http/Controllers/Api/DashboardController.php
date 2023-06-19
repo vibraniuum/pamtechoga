@@ -65,7 +65,7 @@ class DashboardController extends Controller
      */
     public function fuelPrices(): JsonResponse
     {
-        $fuelPrices = FuelPrice::paginate(20);
+        $fuelPrices = FuelPrice::orderBy('petrol', 'desc')->paginate(50);
 
         return response()->json([
             'status' => true,

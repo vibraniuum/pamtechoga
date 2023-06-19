@@ -19,7 +19,7 @@ class CreatePamtechogaFuelPricesTable extends Migration
             $table->float('petrol');
             $table->float('diesel')->nullable();
             $table->float('premium')->nullable();
-            $table->text('logo');
+            $table->text('logo')->nullable();
             $table->json('meta')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
