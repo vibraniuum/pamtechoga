@@ -163,4 +163,54 @@ class BranchController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        try {
+            $validateData = Validator::make($request->all(),
+                [
+                    'address' => 'required',
+                ]);
+
+            if($validateData->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateData->errors()
+                ], 401);
+            }
+
+            $user = auth()->user();
+
+            $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
+
+            $organization = $organizationUser->organization;
+
+            $branch = Branch::create([
+                'organization_id' => $organization->id,
+                ...$request->all()
+            ]);
+
+            $branchResource = Branch::find($branch->id);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Branch Created successfully!",
+                'data' => $branchResource
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
 }
