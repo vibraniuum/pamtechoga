@@ -31,7 +31,7 @@ class OrderController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $orders = Order::where('organization_id', $organization->id)->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(20);
+        $orders = Order::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(20);
 
         return response()->json([
             'status' => true,

@@ -32,7 +32,7 @@ class PaymentController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $payments = Payment::where('organization_id', $organization->id)->with('organization')->paginate(20);
+        $payments = Payment::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('organization')->paginate(20);
 
         return response()->json([
             'status' => true,
@@ -61,6 +61,60 @@ class PaymentController extends Controller
             'status' => true,
             'organization' => $organization
         ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function store(Request $request): JsonResponse
+    {
+        try {
+            $validateData = Validator::make($request->all(),
+                [
+                    'amount' => 'required',
+                    'payment_date' => 'required',
+                    'reference_photo' => 'nullable',
+                    'reference_description' => 'nullable',
+                ]);
+
+            if($validateData->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateData->errors()
+                ], 401);
+            }
+
+            $user = auth()->user();
+
+            $userOrganization = OrganizationUser::where('user_id', $user->id)->first();
+
+            $organization = $userOrganization->organization;
+
+            $payment = Payment::create([
+                'type' => 'DEBT',
+                'user_id' => $user->id,
+                'organization_id' => $organization->id,
+                ...$request->all()
+            ]);
+
+            $paymentResource = Payment::find($payment->id)->first();
+
+            return response()->json([
+                'status' => true,
+                'message' => "Payment created successfully!",
+                'data' => $paymentResource
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
     /**
