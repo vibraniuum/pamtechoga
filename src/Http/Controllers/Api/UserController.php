@@ -6,7 +6,11 @@ use Helix\Lego\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
+use Vibraniuum\Pamtechoga\Models\Payment;
 
 /**
  * @group User management
@@ -15,7 +19,6 @@ use Vibraniuum\Pamtechoga\Models\OrganizationUser;
  */
 class UserController extends Controller
 {
-
 
     public function index()
     {
@@ -44,20 +47,58 @@ class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-//        $post = User::create($request->all());
-//
-//        return response()->json([
-//            'status' => true,
-//            'message' => "Post Created successfully!",
-//            'post' => $post
-//        ], 200);
+        try {
+            //Validated
+            $validateUser = Validator::make($request->all(),
+                [
+                    'name' => 'required',
+                    'email' => 'required|email|unique:users,email',
+                ]);
+
+            if($validateUser->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
+
+            $user = auth()->user();
+
+            $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
+
+            $organization = $organizationUser->organization;
+
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => Hash::make('11111111') // 8 ones
+            ]);
+
+            OrganizationUser::create([
+                'organization_id' => $organization->id,
+                'user_id' => $user->id,
+            ]);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User Created Successfully',
+                'data' => $user
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
     }
 
 //    /**
