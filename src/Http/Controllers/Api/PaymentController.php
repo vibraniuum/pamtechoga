@@ -11,6 +11,7 @@ use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
+use Vibraniuum\Pamtechoga\Models\PaymentDetail;
 
 /**
  * @group Order management
@@ -39,6 +40,22 @@ class PaymentController extends Controller
             'data' => $payments,
         ]);
     }
+
+    /**
+     * Display the specified resource.
+     *
+     * @return JsonResponse
+     */
+    public function paymentDetails(): JsonResponse
+    {
+        $paymentDetails = PaymentDetail::orderBy('created_at', 'desc')->first();
+
+        return response()->json([
+            'status' => true,
+            'data' => $paymentDetails,
+        ]);
+    }
+
 
 
     /**
