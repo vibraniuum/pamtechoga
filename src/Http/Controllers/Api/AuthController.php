@@ -139,7 +139,9 @@ class AuthController extends Controller
                     'organization_id' => $organization->id
                 ]);
             } else {
-                $userDevice->device_token = $request->device_token;
+                $userDevice->update([
+                    'device_token' => $request->device_token
+                ]);
             }
 
             return response()->json([
