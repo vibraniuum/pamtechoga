@@ -125,6 +125,9 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->first();
+            $userOrganization = OrganizationUser::where('user_id', $user->id)->first();
+
+            $organization = $userOrganization->organization;
 
             // update device token
             $userDevice = DeviceToken::where('user_id', $user->id)->first();
@@ -132,7 +135,8 @@ class AuthController extends Controller
             if(is_null($userDevice)) {
                 DeviceToken::create([
                     'user_id' => $user->id,
-                    'device_token' => $request->device_token
+                    'device_token' => $request->device_token,
+                    'organization_id' => $organization->id
                 ]);
             } else {
                 $userDevice->device_token = $request->device_token;

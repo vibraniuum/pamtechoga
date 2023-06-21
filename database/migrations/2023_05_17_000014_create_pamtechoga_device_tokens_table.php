@@ -17,6 +17,7 @@ class CreatePamtechogaDeviceTokensTable extends Migration
             $table->increments('id');
             $table->text('device_token')->nullable();
             $table->integer('user_id');
+            $table->integer('organization_id');
             $table->json('meta')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
