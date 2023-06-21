@@ -101,6 +101,77 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function saveDeviceToken(Request $request)
+    {
+        try {
+            //Validated
+            $validateUser = Validator::make($request->all(),
+                [
+                    'device_token' => 'required',
+                ]);
+
+            if($validateUser->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
+
+//            $user = auth()->user();
+
+//            $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
+
+//            $organization = $organizationUser->organization;
+
+
+            $SERVER_API_KEY = env('FCM_SERVER_KEY');
+
+            $data = [
+                "registration_ids" => $request->device_token,
+                "notification" => [
+                    "title" => $request->title,
+                    "body" => $request->body,
+                ]
+            ];
+            $dataString = json_encode($data);
+
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+//            $ch = curl_init();
+//
+//            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+//            curl_setopt($ch, CURLOPT_POST, true);
+//            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+//
+//            $response = curl_exec($ch);
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Notification send successfully.',
+                'data' => $request->device_token
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
 //    /**
 //     * Display the specified resource.
 //     *

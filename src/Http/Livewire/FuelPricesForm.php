@@ -3,6 +3,7 @@
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Form;
+use Vibraniuum\Pamtechoga\Events\FuelPriceUpdated;
 use Vibraniuum\Pamtechoga\Models\FuelPrice;
 
 class FuelPricesForm extends Form
@@ -39,5 +40,9 @@ class FuelPricesForm extends Form
     {
         $this->model->logo = $this->model->getFirstMedia('Logo')->getUrl();
         $this->model->save();
+
+        FuelPriceUpdated::dispatch([
+            'company_name' => $this->model->company_name
+        ]);
     }
 }

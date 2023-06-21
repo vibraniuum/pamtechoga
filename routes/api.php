@@ -2,6 +2,7 @@
 
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\BranchController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\DashboardController;
+use Vibraniuum\Pamtechoga\Http\Controllers\Api\DeviceController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrderController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrganizationController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\PaymentController;
@@ -14,6 +15,7 @@ Route::post('/auth/register', [AuthController::class, 'createUser']);
 Route::post('/auth/login', [AuthController::class, 'loginUser']);
 
 Route::apiResource('users', UserController::class)->middleware('auth:sanctum');
+Route::post('/device-token', [DeviceController::class, 'saveDeviceToken'])->middleware('auth:sanctum');
 Route::apiResource('organizations', OrganizationController::class)->middleware('auth:sanctum');
 Route::apiResource('branches', BranchController::class)->middleware('auth:sanctum');
 Route::apiResource('orders', OrderController::class)->middleware('auth:sanctum');
