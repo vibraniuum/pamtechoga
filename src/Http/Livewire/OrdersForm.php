@@ -3,6 +3,7 @@
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Form;
+use Vibraniuum\Pamtechoga\Events\OrderUpdated;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Order;
@@ -40,6 +41,11 @@ class OrdersForm extends Form
     public function view()
     {
         return 'pamtechoga::models.orders.form';
+    }
+
+    public function saved()
+    {
+        OrderUpdated::dispatch();
     }
 
     public function model(): string

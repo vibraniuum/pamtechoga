@@ -2,12 +2,6 @@
 
 namespace Vibraniuum\Pamtechoga\Services;
 
-
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Auth\User;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\Mail;
-use Vibraniuum\Pamtechoga\Events\FuelPriceUpdated;
 use Vibraniuum\Pamtechoga\Models\DeviceToken;
 
 class PamtechPushNotifications
