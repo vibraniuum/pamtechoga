@@ -16,7 +16,7 @@ class OrderUpdated
      *
      * @return void
      */
-    public function __construct(public $formData)
+    public function __construct()
     {
         //
     }
