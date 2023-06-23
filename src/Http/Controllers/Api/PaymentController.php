@@ -88,7 +88,7 @@ class PaymentController extends Controller
         return response()->json([
             'status' => true,
             'data' => $payments,
-            'bfDebt' => $bfDebt ?? 0.0,
+            'bf_debt' => $bfDebt ?? 0.0,
             'total' => $total ?? 0.0,
             'balance' => $balance ?? 0.0,
         ]);
