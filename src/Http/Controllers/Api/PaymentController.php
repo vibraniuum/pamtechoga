@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Order;
@@ -38,8 +39,37 @@ class PaymentController extends Controller
         $status = $request->query('status');
 
         if(!$all_time) {
+            /**
+             * BF-Debt (brought froward balance) = (SUM(orders amount before start date) - SUM(payments before start date))
+             * payments = records within range of start date and end date
+             * total = SUM(payments)
+             * balance = BF - total
+             */
+
             $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
             $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
+
+            // -----------------
+            $sumOfOrdersAmountBeforeStartDate = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
+                ->where('pamtechoga_customer_orders.created_at', '<', $startDate)
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
+
+            $sumOfPaymentsBeforeStartDate = Payment::where('organization_id', $organization->id)
+                ->where('status', $status)
+                ->where('created_at', '<', $startDate)
+                ->sum('amount');
+
+            $bfDebt = max($sumOfOrdersAmountBeforeStartDate?->total - $sumOfPaymentsBeforeStartDate, 0);
+
+            $total = Payment::where('organization_id', $organization->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('status', $status)
+                ->sum('amount');
+
+            $balance = max($bfDebt - $total, 0);
+            // -----------------
 
             $payments = Payment::where('organization_id', $organization->id)
                 ->whereBetween('created_at', [$startDate, $endDate])
@@ -55,10 +85,12 @@ class PaymentController extends Controller
                 ->paginate(50);
         }
 
-
         return response()->json([
             'status' => true,
             'data' => $payments,
+            'bfDebt' => $bfDebt ?? 0.0,
+            'total' => $total ?? 0.0,
+            'balance' => $balance ?? 0.0,
         ]);
     }
 
