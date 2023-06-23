@@ -19,7 +19,7 @@ class CreatePamtechogaCustomerOrdersTable extends Migration
             $table->enum('status', ['PENDING', 'PROCESSING', 'DISPATCHED', 'DELIVERED', 'CANCELED'])->default('PENDING');
             $table->integer('organization_id');
             $table->integer('branch_id')->nullable();
-            $table->float('volume');
+            $table->double('volume', 16, 2);
             $table->float('unit_price');
             $table->integer('driver_id')->nullable();
             $table->boolean('made_down_payment')->default(false);

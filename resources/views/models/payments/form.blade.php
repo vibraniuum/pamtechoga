@@ -2,7 +2,7 @@
     :title="$model?->organization?->name ?: 'Untitled'"
     :breadcrumbs="[
             ['title' => 'Home', 'url' => route('lego.dashboard')],
-            ['title' => 'Depot Pickups', 'url' => route('lego.pamtechoga.payments.index')],
+            ['title' => 'Payments', 'url' => route('lego.pamtechoga.payments.index')],
             ['title' => $model?->organization?->name ?: 'Untitled'],
         ]"
     x-data=""

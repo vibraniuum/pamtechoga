@@ -18,7 +18,7 @@ class CreatePamtechogaDepotOrdersTable extends Migration
             $table->integer('product_id');
             $table->integer('depot_id');
             $table->enum('status', ['PENDING', 'PROCESSING', 'LOADED', 'UNLOADED', 'CANCELED'])->default('PENDING');
-            $table->float('volume');
+            $table->double('volume', 16, 2);
             $table->float('unit_price');
             $table->float('trucking_expense')->default(0);
             $table->json('meta')->nullable();

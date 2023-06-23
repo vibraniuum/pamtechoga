@@ -21,7 +21,7 @@ class CreatePamtechogaPaymentsTable extends Migration
             $table->integer('user_id'); // track who created the record
             $table->enum('status', ['PENDING', 'CONFIRMED', 'CANCELED'])->default('PENDING');
             $table->enum('type', ['DOWN PAYMENT', 'DEBT', 'DEPOT', 'OTHER'])->default('OTHER');
-            $table->float('amount');
+            $table->double('amount', 16, 2);
             $table->dateTime('payment_date');
             $table->text('reference_photo')->nullable();
             $table->text('reference_description')->nullable();
