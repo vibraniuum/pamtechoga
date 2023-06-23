@@ -41,17 +41,20 @@ class DashboardController extends Controller
             $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
 
             $orders = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->count();
 
             $ordersBreakDownByProduct = Order::select( 'pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('COUNT(pamtechoga_customer_orders.product_id) as total'))
                 ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
                 ->where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->whereBetween('pamtechoga_customer_orders.created_at', [$startDate, $endDate])
                 ->groupBy('product_id')
                 ->get();
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->whereBetween('pamtechoga_customer_orders.created_at', [$startDate, $endDate])
                 ->select(DB::raw('SUM(volume * unit_price) AS total'))
                 ->first();
@@ -62,15 +65,18 @@ class DashboardController extends Controller
                 ->sum('amount');
         } else {
             $orders = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->count();
 
             $ordersBreakDownByProduct = Order::select( 'pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('COUNT(pamtechoga_customer_orders.product_id) as total'))
                 ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
                 ->where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->groupBy('product_id')
                 ->get();
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
                 ->select(DB::raw('SUM(volume * unit_price) AS total'))
                 ->first();
 
