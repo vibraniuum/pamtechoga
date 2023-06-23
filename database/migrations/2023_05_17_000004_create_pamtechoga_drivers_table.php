@@ -20,6 +20,7 @@ class CreatePamtechogaDriversTable extends Migration
             $table->string('email')->nullable();
             $table->string('address');
             $table->integer('truck_id')->nullable();
+            $table->text('photo')->nullable();
             $table->json('meta')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();

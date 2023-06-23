@@ -3,6 +3,7 @@
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Form;
+use Vibraniuum\Pamtechoga\Events\FuelPriceUpdated;
 use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Truck;
 
@@ -18,6 +19,7 @@ class DriversForm extends Form
             'model.email' => 'nullable',
             'model.address' => 'required',
             'model.truck_id' => 'nullable',
+            'model.photo' => 'nullable',
         ];
     }
 
@@ -41,5 +43,10 @@ class DriversForm extends Form
         return Truck::all();
     }
 
+    public function saved()
+    {
+        $this->model->photo = $this->model->getFirstMedia('Photo')->getUrl();
+        $this->model->save();
+    }
 
 }

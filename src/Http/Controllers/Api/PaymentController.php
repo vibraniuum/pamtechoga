@@ -2,6 +2,7 @@
 
 namespace Vibraniuum\Pamtechoga\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class PaymentController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $user = auth()->user();
 
@@ -33,7 +34,27 @@ class PaymentController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $payments = Payment::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('organization')->paginate(20);
+        $all_time = (bool)$request->query('all_time');
+        $status = $request->query('status');
+
+        if(!$all_time) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
+
+            $payments = Payment::where('organization_id', $organization->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->where('status', $status)
+                ->orderBy('created_at', 'desc')
+                ->with('organization')
+                ->paginate(50);
+        } else {
+            $payments = Payment::where('organization_id', $organization->id)
+                ->where('status', $status)
+                ->orderBy('created_at', 'desc')
+                ->with('organization')
+                ->paginate(50);
+        }
+
 
         return response()->json([
             'status' => true,
@@ -55,8 +76,6 @@ class PaymentController extends Controller
             'data' => $paymentDetails,
         ]);
     }
-
-
 
     /**
      * Display the specified resource.

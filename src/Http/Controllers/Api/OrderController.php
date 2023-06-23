@@ -2,6 +2,7 @@
 
 namespace Vibraniuum\Pamtechoga\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -10,6 +11,7 @@ use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
+use Vibraniuum\Pamtechoga\Models\Payment;
 
 /**
  * @group Order management
@@ -23,7 +25,7 @@ class OrderController extends Controller
      *
      * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $user = auth()->user();
 
@@ -31,7 +33,18 @@ class OrderController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $orders = Order::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(20);
+        $all_time = (bool)$request->query('all_time');
+
+        if(!$all_time) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
+
+            $orders = Order::where('organization_id', $organization->id)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(50);
+        } else {
+            $orders = Order::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(50);
+
+        }
+
 
         return response()->json([
             'status' => true,

@@ -2,6 +2,7 @@
 
 namespace Vibraniuum\Pamtechoga\Http\Controllers\Api;
 
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
@@ -25,7 +26,7 @@ class DashboardController extends Controller
      *
      * @return JsonResponse
      */
-    public function dashboard(): JsonResponse
+    public function dashboard(Request $request): JsonResponse
     {
         $user = auth()->user();
 
@@ -33,19 +34,50 @@ class DashboardController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $orders = Order::where('organization_id', $organization->id)->count();
+        $all_time = (bool)$request->query('all_time');
 
-        $ordersBreakDownByProduct = Order::select( 'pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('COUNT(pamtechoga_customer_orders.product_id) as total'))
-            ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
-            ->where('organization_id', $organization->id)
-            ->groupBy('product_id')
-            ->get();
+        if(!$all_time) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
 
-        $totalOrderAmount = Order::where('organization_id', $organization->id)
-                                ->select(DB::raw('SUM(volume * unit_price) AS total'))
-                                ->first();
+            $orders = Order::where('organization_id', $organization->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->count();
 
-        $totalPayments = Payment::where('organization_id', $organization->id)->sum('amount');
+            $ordersBreakDownByProduct = Order::select( 'pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('COUNT(pamtechoga_customer_orders.product_id) as total'))
+                ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
+                ->where('organization_id', $organization->id)
+                ->whereBetween('pamtechoga_customer_orders.created_at', [$startDate, $endDate])
+                ->groupBy('product_id')
+                ->get();
+
+            $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->whereBetween('pamtechoga_customer_orders.created_at', [$startDate, $endDate])
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
+
+            $totalPayments = Payment::where('organization_id', $organization->id)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->sum('amount');
+        } else {
+            $orders = Order::where('organization_id', $organization->id)
+                ->count();
+
+            $ordersBreakDownByProduct = Order::select( 'pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('COUNT(pamtechoga_customer_orders.product_id) as total'))
+                ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
+                ->where('organization_id', $organization->id)
+                ->groupBy('product_id')
+                ->get();
+
+            $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
+
+            $totalPayments = Payment::where('organization_id', $organization->id)
+                ->sum('amount');
+        }
+
+
 
         return response()->json([
             'status' => true,

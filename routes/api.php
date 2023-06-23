@@ -20,6 +20,7 @@ Route::apiResource('organizations', OrganizationController::class)->middleware('
 Route::apiResource('branches', BranchController::class)->middleware('auth:sanctum');
 Route::apiResource('orders', OrderController::class)->middleware('auth:sanctum');
 Route::apiResource('payments', PaymentController::class)->middleware('auth:sanctum');
+Route::get('/breakdown', [PaymentController::class, 'breakdown'])->middleware('auth:sanctum');
 Route::get('/payment-details', [PaymentController::class, 'paymentDetails'])->middleware('auth:sanctum');
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 
