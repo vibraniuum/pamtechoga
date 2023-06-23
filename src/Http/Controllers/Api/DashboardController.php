@@ -57,6 +57,7 @@ class DashboardController extends Controller
                 ->first();
 
             $totalPayments = Payment::where('organization_id', $organization->id)
+                ->where('status', 'CONFIRMED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->sum('amount');
         } else {
@@ -74,6 +75,7 @@ class DashboardController extends Controller
                 ->first();
 
             $totalPayments = Payment::where('organization_id', $organization->id)
+                ->where('status', 'CONFIRMED')
                 ->sum('amount');
         }
 
@@ -83,7 +85,7 @@ class DashboardController extends Controller
             'status' => true,
             'data' => [
                 "total_payments" => $totalPayments,
-                "total_debt" => $totalOrderAmount?->total - $totalPayments,
+                "total_debt" => $totalOrderAmount?->total - $totalPayments <= 0 ? 0 : $totalOrderAmount?->total - $totalPayments,
                 "total_orders" => $orders,
                 "order_breakdown_by_product" => $ordersBreakDownByProduct
             ],
