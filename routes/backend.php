@@ -3,6 +3,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersForm;
@@ -175,6 +177,16 @@ Route::group([
         Route::get('/', NewsIndex::class)->name('index');
         Route::get('/create', NewsForm::class)->name('create');
         Route::get('/{news}/edit', NewsForm::class)->name('edit');
+    });
+
+    // Announcements
+    Route::group([
+        'as' => 'announcements.',
+        'prefix' => 'announcements/'
+    ], function() {
+        Route::get('/', AnnouncementsIndex::class)->name('index');
+        Route::get('/create', AnnouncementsForm::class)->name('create');
+        Route::get('/{announcement}/edit', AnnouncementsForm::class)->name('edit');
     });
 
 });

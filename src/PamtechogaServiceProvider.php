@@ -20,6 +20,8 @@ use Helix\Lego\Menus\Menu;
 use Livewire\Livewire;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersForm;
@@ -123,6 +125,12 @@ class PamtechogaServiceProvider extends PackageServiceProvider
                 );
                 $menu->addToSection(
                     Menu::MAIN_SECTIONS['PRIMARY'],
+                    Link::to(route('lego.pamtechoga.announcements.index'), 'Announcements')
+                        ->icon(Icon::FOLDER_OPEN)
+                        ->after('Models')
+                );
+                $menu->addToSection(
+                    Menu::MAIN_SECTIONS['PRIMARY'],
                     Link::to(route('lego.pamtechoga.news.index'), 'News')
                         ->icon(Icon::FOLDER_OPEN)
                         ->after('Models')
@@ -190,5 +198,7 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-fuel-prices-form', FuelPricesForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-index', NewsIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-form', NewsForm::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-index', AnnouncementsIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-form', AnnouncementsForm::class);
     }
 }
