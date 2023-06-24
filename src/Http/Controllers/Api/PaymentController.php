@@ -63,12 +63,12 @@ class PaymentController extends Controller
 
             $bfDebt = max($sumOfOrdersAmountBeforeStartDate?->total - $sumOfPaymentsBeforeStartDate, 0);
 
-            $total = Payment::where('organization_id', $organization->id)
+            $totalPaymentsWithinRange = Payment::where('organization_id', $organization->id)
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', $status)
                 ->sum('amount');
 
-            $balance = max($bfDebt - $total, 0);
+            $balance = max($bfDebt - $totalPaymentsWithinRange, 0);
             // -----------------
 
             $payments = Payment::where('organization_id', $organization->id)
@@ -83,14 +83,13 @@ class PaymentController extends Controller
                 ->where('status', '<>', 'CANCELED')
                 ->select(DB::raw('SUM(volume * unit_price) AS total'))
                 ->first();
-
-            $total = Payment::where('organization_id', $organization->id)
+            $totalPaymentsWithinRange = Payment::where('organization_id', $organization->id)
                 ->where('status', 'CONFIRMED')
                 ->sum('amount');
 
-            $bfDebt = max($sumOfAllTimeOrdersAmount?->total - $total, 0);
-
-            $balance = max($bfDebt, 0);
+            $allTimeDebt = max($sumOfAllTimeOrdersAmount?->total - $totalPaymentsWithinRange, 0);
+            $balance = max($allTimeDebt, 0);
+            $bfDebt = 0; // for all time filter, balance brought forward would always
             // -----------------
 
             $payments = Payment::where('organization_id', $organization->id)
@@ -104,7 +103,7 @@ class PaymentController extends Controller
             'status' => true,
             'data' => $payments,
             'bf_debt' => $bfDebt ?? 0.0,
-            'total' => $total ?? 0.0,
+            'total' => $totalPaymentsWithinRange ?? 0.0,
             'balance' => $balance ?? 0.0,
         ]);
     }
