@@ -78,6 +78,21 @@ class PaymentController extends Controller
                 ->with('organization')
                 ->paginate(50);
         } else {
+            // -----------------
+            $sumOfAllTimeOrdersAmount = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
+
+            $total = Payment::where('organization_id', $organization->id)
+                ->where('status', 'CONFIRMED')
+                ->sum('amount');
+
+            $bfDebt = max($sumOfAllTimeOrdersAmount?->total - $total, 0);
+
+            $balance = max($bfDebt, 0);
+            // -----------------
+
             $payments = Payment::where('organization_id', $organization->id)
                 ->where('status', $status)
                 ->orderBy('created_at', 'desc')
