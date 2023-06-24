@@ -33,6 +33,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\DriversForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DriversIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\FuelPricesIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\NewsForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\NewsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersForm;
@@ -121,6 +123,12 @@ class PamtechogaServiceProvider extends PackageServiceProvider
                 );
                 $menu->addToSection(
                     Menu::MAIN_SECTIONS['PRIMARY'],
+                    Link::to(route('lego.pamtechoga.news.index'), 'News')
+                        ->icon(Icon::FOLDER_OPEN)
+                        ->after('Models')
+                );
+                $menu->addToSection(
+                    Menu::MAIN_SECTIONS['PRIMARY'],
                     Link::to(route('lego.pamtechoga.fuel-prices.index'), 'Fuel Prices')
                         ->icon(Icon::FOLDER_OPEN)
                         ->after('Models')
@@ -180,5 +188,7 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-payments-form', PaymentsForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-fuel-prices-index', FuelPricesIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-fuel-prices-form', FuelPricesForm::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-index', NewsIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-form', NewsForm::class);
     }
 }

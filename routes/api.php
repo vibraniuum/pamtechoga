@@ -3,6 +3,7 @@
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\BranchController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\DashboardController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\DeviceController;
+use Vibraniuum\Pamtechoga\Http\Controllers\Api\NewsController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrderController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrganizationController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\PaymentController;
@@ -27,4 +28,6 @@ Route::apiResource('products', ProductController::class)->middleware('auth:sanct
 Route::get('/fuel-prices', [DashboardController::class, 'fuelPrices'])->middleware('auth:sanctum');
 
 Route::get('/dashboard/stats', [DashboardController::class, 'dashboard'])->middleware('auth:sanctum');
+
+Route::get('/news', [NewsController::class, 'index'])->middleware('auth:sanctum');
 
