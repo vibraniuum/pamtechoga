@@ -33,12 +33,13 @@ class AnnouncementsForm extends Form
         return Announcement::class;
     }
 
-    // blast announcement on save
-    public function saved()
+    public function sendAnnouncement()
     {
         AnnouncementBlasted::dispatch([
             'title' => $this->model->title,
             'message' => $this->model->message,
         ]);
+
+        $this->confetti();
     }
 }

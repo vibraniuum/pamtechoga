@@ -10,6 +10,9 @@
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
     <x-slot name="actions">
+        <button wire:click="sendAnnouncement" class="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:mt-0 sm:w-auto">
+            Broadcast as Announcement
+        </button>
         @include('lego::models._includes.forms.page-actions')
     </x-slot>
     <x-lego::feedback.errors class="sh-mb-4" />
