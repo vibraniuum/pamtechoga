@@ -21,7 +21,7 @@ class SupportMessageController extends Controller
 
         $organization = $userOrganization->organization;
 
-        $messages = SupportMessage::where('organization_id', $organization->id)->with('user', 'organization')->paginate(20);
+        $messages = SupportMessage::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('user', 'organization')->paginate(20);
 
         return response()->json([
             'status' => true,
@@ -66,7 +66,7 @@ class SupportMessageController extends Controller
                 ...$request->all()
             ]);
 
-            $messageFromDB = SupportMessage::find($message->id)->with('user', 'organization')->first();
+            $messageFromDB = SupportMessage::where('id', $message->id)->with('user', 'organization')->first();
 
             return response()->json([
                 'status' => true,
