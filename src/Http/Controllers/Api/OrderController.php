@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Order;
@@ -34,20 +35,42 @@ class OrderController extends Controller
         $organization = $userOrganization->organization;
 
         $all_time = (bool)$request->query('all_time');
+        $status = $request->query('status');
 
         if(!$all_time) {
             $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
             $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
 
-            $orders = Order::where('organization_id', $organization->id)->whereBetween('created_at', [$startDate, $endDate])->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(50);
+            $orders = Order::where('organization_id', $organization->id)
+                ->where('status', $status)
+                ->whereBetween('created_at', [$startDate, $endDate])
+                ->orderBy('created_at', 'desc')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
+                ->orderBy('created_at', 'desc')
+                ->paginate(50);
+
+            $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
+                ->whereBetween('pamtechoga_customer_orders.created_at', [$startDate, $endDate])
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
         } else {
-            $orders = Order::where('organization_id', $organization->id)->orderBy('created_at', 'desc')->with('product', 'organization', 'branch', 'driver', 'driver.truck')->orderBy('created_at', 'desc')->paginate(50);
+            $orders = Order::where('organization_id', $organization->id)
+                ->where('status', $status)
+                ->orderBy('created_at', 'desc')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
+                ->orderBy('created_at', 'desc')
+                ->paginate(50);
 
+            $totalOrderAmount = Order::where('organization_id', $organization->id)
+                ->where('status', '<>', 'CANCELED')
+                ->select(DB::raw('SUM(volume * unit_price) AS total'))
+                ->first();
         }
-
 
         return response()->json([
             'status' => true,
+            'total_orders_amount_sum' => $totalOrderAmount?->total,
             'data' => $orders,
         ]);
     }
