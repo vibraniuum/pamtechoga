@@ -42,7 +42,8 @@ class OrderController extends Controller
             $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
 
             $orders = Order::where('organization_id', $organization->id)
-                ->where('status', $status)
+//                ->where('status', $status)
+                ->where('status', '<>', 'CANCELED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc')
                 ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
@@ -56,7 +57,8 @@ class OrderController extends Controller
                 ->first();
         } else {
             $orders = Order::where('organization_id', $organization->id)
-                ->where('status', $status)
+//                ->where('status', $status)
+                ->where('status', '<>', 'CANCELED')
                 ->orderBy('created_at', 'desc')
                 ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
                 ->orderBy('created_at', 'desc')
