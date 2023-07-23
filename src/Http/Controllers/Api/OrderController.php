@@ -57,7 +57,7 @@ class OrderController extends Controller
                 ->first();
         } else {
             $orders = Order::where('organization_id', $organization->id)
-                ->where('status', $status)
+//                ->where('status', $status) all time should return regardless of status
                 ->where('status', '<>', 'CANCELED')
                 ->orderBy('created_at', 'desc')
                 ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
