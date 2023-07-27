@@ -1,5 +1,12 @@
+@php
+    use Vibraniuum\Pamtechoga\Models\Branch;
+
+    $totalBranches = Branch::count();
+
+@endphp
+
 <x-fab::layouts.page
-    title="Organizations"
+    title="Organization Branches"
     :breadcrumbs="[
         ['title' => 'Home', 'url' => route('lego.dashboard')],
         ['title' => 'Organizations','url' => route('lego.pamtechoga.organizations.index')],
@@ -10,8 +17,19 @@
         <x-fab::elements.button type="link" :url="route('lego.pamtechoga.branches.create')">Create</x-fab::elements.button>
     </x-slot>
 
-        @include('lego::models._includes.indexes.filters')
+    <div>
+        <dl class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
 
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                <dt class="truncate text-sm font-medium text-gray-500">Total Branches</dt>
+                <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">{{ number_format($totalBranches) }}</dd>
+            </div>
+        </dl>
+    </div>
+
+    <div class="mt-8">
+        @include('lego::models._includes.indexes.filters')
+    </div>
     <x-fab::lists.table>
         <x-slot name="headers">
             @include('lego::models._includes.indexes.headers')

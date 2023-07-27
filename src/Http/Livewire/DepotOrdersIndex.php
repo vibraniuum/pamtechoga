@@ -17,6 +17,7 @@ class DepotOrdersIndex extends BaseIndex
     {
         return [
             'depot_name' => 'Depot Name',
+            'product' => 'Product',
             'volume' => 'Volume (Litres)',
             'status' => 'Status',
             'unit_price' => 'Unit Price (NGN)',

@@ -24,6 +24,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationOrdersIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationPaymentsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\PaymentDetailsForm;
@@ -48,6 +50,8 @@ Route::group([
         Route::get('/', OrganizationsIndex::class)->name('index');
         Route::get('/create', OrganizationsForm::class)->name('create');
         Route::get('/{organization}/edit', OrganizationsForm::class)->name('edit');
+        Route::get('/{organization}/orders', OrganizationOrdersIndex::class)->name('organizationOrders');
+        Route::get('/{organization}/payments', OrganizationPaymentsIndex::class)->name('organizationPayments');
     });
 
     Route::group([

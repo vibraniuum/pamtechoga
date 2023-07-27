@@ -17,6 +17,17 @@
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
+            <x-fab::forms.select
+                wire:model="model.product_id"
+                label="Product"
+                help="This is the product being ordered."
+            >
+                <option value="0">-- Choose the Product</option>
+                @foreach($this->allProducts() as $data)
+                    <option value="{{ $data->id }}"> {{ $data->type }} </option>
+                @endforeach
+            </x-fab::forms.select>
+
             <x-fab::forms.input
                 wire:model="model.plate_number"
                 label="Plate Number"
