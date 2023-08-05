@@ -4,9 +4,20 @@ namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Index as BaseIndex;
 use Vibraniuum\Pamtechoga\Models\Order;
+use Vibraniuum\Pamtechoga\Traits\DateFilter;
 
 class SalesIndex extends BaseIndex
 {
+    use DateFilter;
+
+    protected $listeners = ['filterApplied'];
+
+    public function filterApplied($filterData)
+    {
+        $this->startDate = $filterData['startDate'];
+        $this->endDate = $filterData['endDate'];
+        $this->mount();
+    }
 
     public function model(): string
     {
@@ -31,6 +42,10 @@ class SalesIndex extends BaseIndex
 
     public function render()
     {
+        if($this->canResetDate) {
+            $this->resetDates();
+        }
+        $this->applyFilter();
         return view('pamtechoga::models.sales.index', [
             'models' => $this->getModels(),
         ])->extends('lego::layouts.lego')->section('content');

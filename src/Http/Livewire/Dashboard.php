@@ -6,7 +6,7 @@ use Helix\Lego\Http\Livewire\Models\Index as BaseIndex;
 use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Traits\DateFilter;
 
-class DepotOrdersIndex extends BaseIndex
+class Dashboard extends BaseIndex
 {
     use DateFilter;
 
@@ -47,7 +47,7 @@ class DepotOrdersIndex extends BaseIndex
             $this->resetDates();
         }
         $this->applyFilter();
-        return view('pamtechoga::models.depot-orders.index', [
+        return view('pamtechoga::models.dashboard.index', [
             'models' => $this->getModels(),
         ])->extends('lego::layouts.lego')->section('content');
     }

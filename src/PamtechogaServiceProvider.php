@@ -24,6 +24,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\Dashboard;
+use Vibraniuum\Pamtechoga\Http\Livewire\DateFilter;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotPickupsCreate;
@@ -200,5 +202,7 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-form', NewsForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-index', AnnouncementsIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-form', AnnouncementsForm::class);
+        Livewire::component('pamtechoga-datefilter-form', DateFilter::class);
+        Livewire::component('pamtechoga-dashboard', Dashboard::class);
     }
 }
