@@ -8,6 +8,7 @@ use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrderController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\OrganizationController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\PaymentController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\ProductController;
+use Vibraniuum\Pamtechoga\Http\Controllers\Api\ReviewsController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\SupportMessageController;
 use Vibraniuum\Pamtechoga\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,7 @@ Route::get('/breakdown', [PaymentController::class, 'breakdown'])->middleware('a
 Route::get('/payment-details', [PaymentController::class, 'paymentDetails'])->middleware('auth:sanctum');
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::apiResource('support-messages', SupportMessageController::class)->middleware('auth:sanctum');
+Route::apiResource('reviews', ReviewsController::class)->middleware('auth:sanctum');
 
 Route::get('/fuel-prices', [DashboardController::class, 'fuelPrices'])->middleware('auth:sanctum');
 
