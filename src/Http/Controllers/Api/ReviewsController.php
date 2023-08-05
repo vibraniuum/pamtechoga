@@ -32,6 +32,39 @@ class ReviewsController extends Controller
         ]);
     }
 
+    public function orderReviews(Request $request)
+    {
+        //Validated
+        $validateMessage = Validator::make($request->all(),
+            [
+                'order_id' => 'required',
+            ]);
+
+        if($validateMessage->fails()){
+            return response()->json([
+                'status' => false,
+                'message' => 'validation error',
+                'errors' => $validateMessage->errors()
+            ], 401);
+        }
+
+        $review = Review::where('order_id', $request->all()['order_id'])->first();
+
+        if(is_null($review)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order not found',
+                'data' => null,
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Review Retrieved for order Successfully',
+            'data' => $review
+        ], 200);
+    }
+
     /**
      * Update the specified resource in storage.
      *

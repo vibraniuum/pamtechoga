@@ -28,6 +28,7 @@ Route::get('/payment-details', [PaymentController::class, 'paymentDetails'])->mi
 Route::apiResource('products', ProductController::class)->middleware('auth:sanctum');
 Route::apiResource('support-messages', SupportMessageController::class)->middleware('auth:sanctum');
 Route::apiResource('reviews', ReviewsController::class)->middleware('auth:sanctum');
+Route::get('/order-reviews', [ReviewsController::class, 'orderReviews'])->middleware('auth:sanctum');
 
 Route::get('/fuel-prices', [DashboardController::class, 'fuelPrices'])->middleware('auth:sanctum');
 
