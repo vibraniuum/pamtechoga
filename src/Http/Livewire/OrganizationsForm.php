@@ -5,8 +5,11 @@ namespace Vibraniuum\Pamtechoga\Http\Livewire;
 use Helix\Lego\Http\Livewire\Models\Form;
 use Helix\Lego\Rules\SlugRule;
 use Illuminate\Support\Collection as SupportCollection;
+use Illuminate\Support\Facades\Hash;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Organization;
+use Helix\Lego\Models\User;
+use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 
 class OrganizationsForm extends Form
 {
@@ -47,7 +50,28 @@ class OrganizationsForm extends Form
 //        $this->selectedProductsIds = $this->selectedProducts->map(fn ($product) => $product->id)->toArray();
     }
 
-//    public function saving()
+    public function saved()
+    {
+        // check to see if a user account with this email exists already
+        // if not, create one with a default password
+
+        $user = User::where('email', $this->model->email)->first();
+
+        if(is_null($user)) {
+            $userAccount = User::create([
+                'name' => $this->model->name,
+                'email' => $this->model->email,
+                'password' => Hash::make('11111111')
+            ]);
+
+            OrganizationUser::create([
+                'organization_id' => $this->model->id,
+                'user_id' => $userAccount->id,
+            ]);
+        }
+    }
+//
+//public function saving()
 //    {
 //        $this->model->products()->sync(
 //            $this->selectedProducts->mapWithKeys(fn ($product, $index) => [$product->id => ['order' => $index]])
