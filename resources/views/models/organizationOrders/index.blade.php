@@ -213,13 +213,14 @@
 
             @if($this->shouldShowColumn('unit_price'))
                 <x-fab::lists.table.column>
-                    <span class="font-bold">Balance</span>
+                    <span class="font-bold">Overall Balance</span>
                 </x-fab::lists.table.column>
             @endif
 
             @if($this->shouldShowColumn('amount'))
                 <x-fab::lists.table.column>
-                    <span class="font-bold">{{ number_format($ordersAmountTotal?->total - $totalPaymentsWithinRange) }}</span>
+{{--                    <span class="font-bold">{{ number_format($ordersAmountTotal?->total - $totalPaymentsWithinRange) }}</span>--}}
+                    <span class="font-bold">{{ number_format($totalDebtOwed) }}</span>
                 </x-fab::lists.table.column>
             @endif
 
