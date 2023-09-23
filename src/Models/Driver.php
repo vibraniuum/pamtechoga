@@ -11,6 +11,7 @@ use Helix\Lego\Models\Model as LegoModel;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\SlugOptions;
 use Vibraniuum\Pamtechoga\Models\Order;
+use Vibraniuum\Pamtechoga\Models\Review;
 
 class Driver extends LegoModel implements Searchable, Mediable
 {
@@ -18,11 +19,16 @@ class Driver extends LegoModel implements Searchable, Mediable
 
     protected $table = 'pamtechoga_drivers';
 
-    protected $appends = ['trips_count'];
+    protected $appends = ['trips_count', 'ratings'];
 
     public function getTripsCountAttribute()
     {
         return Order::where('driver_id', $this->id)->count();
+    }
+
+    public function getRatingsAttribute()
+    {
+        return Review::where('driver_id', $this->id)->avg('rating');
     }
 
     public static function icon(): string

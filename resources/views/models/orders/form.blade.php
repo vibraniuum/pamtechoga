@@ -21,6 +21,7 @@
                 wire:model="model.product_id"
                 label="Product"
                 help="This is the product being ordered."
+                :disabled="$model->product_id ? true : false"
             >
                 <option value="0">-- Choose the Product</option>
                 @foreach($this->allProducts() as $data)
@@ -32,6 +33,7 @@
                 wire:model="model.organization_id"
                 label="Organization"
                 help="This is the organization placing the order or for which this order is being recorded."
+                :disabled="$model->organization_id ? true : false"
             >
                 <option value="0">-- Choose the Organization</option>
                 @foreach($this->allOrganizations() as $data)
