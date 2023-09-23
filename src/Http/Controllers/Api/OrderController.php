@@ -52,7 +52,6 @@ class OrderController extends Controller
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc')
                 ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
-                ->orderBy('created_at', 'desc')
                 ->paginate(50);
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
@@ -66,7 +65,6 @@ class OrderController extends Controller
                 ->where('status', '<>', 'CANCELED')
                 ->orderBy('created_at', 'desc')
                 ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
-                ->orderBy('created_at', 'desc')
                 ->paginate(50);
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
@@ -95,7 +93,6 @@ class OrderController extends Controller
             ->where('status', '<>', 'CANCELED')
             ->orderBy('created_at', 'desc')
             ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
-            ->orderBy('created_at', 'desc')
             ->paginate(50);
 
         return response()->json([
@@ -110,20 +107,36 @@ class OrderController extends Controller
      *
      * @return JsonResponse
      */
-    public function show(): JsonResponse
+    public function show($orderId): JsonResponse
     {
         $user = auth()->user();
 
         $organizationUser = OrganizationUser::where('user_id', $user->id)->first();
 
         $organization = $organizationUser->organization;
-        $branches = $organization->branches;
 
-        $organization['branches'] = $branches;
+        $order = Order::where('id', $orderId)
+            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+            ->first();
+
+        if(is_null($order)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Order does not exist'
+            ], 404);
+        }
+
+        // Check if the user is authorised to view this order
+//        if($order->organization->id != $organization->id) {
+//            return response()->json([
+//                'status' => false,
+//                'message' => 'You are not autheorised to view this order'
+//            ], 500);
+//        }
 
         return response()->json([
             'status' => true,
-            'organization' => $organization
+            'data' => $order
         ]);
     }
 
