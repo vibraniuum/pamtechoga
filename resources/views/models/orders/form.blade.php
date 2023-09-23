@@ -45,6 +45,7 @@
                 wire:model="model.branch_id"
                 label="Branch"
                 help="This is the selected organization's branch for delivery."
+                :disabled="$model->branch_id ? true : false"
             >
                 <option value="0">-- Choose branch --</option>
                 @foreach($this->branchesOfSelectedOrganization() as $data)
