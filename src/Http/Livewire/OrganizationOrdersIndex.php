@@ -14,10 +14,12 @@ use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
 use Vibraniuum\Pamtechoga\Traits\DateFilter;
+use Vibraniuum\Pamtechoga\Traits\DateFilterExtension;
 
 class OrganizationOrdersIndex extends BaseIndex
 {
     use DateFilter;
+    use DateFilterExtension;
 
     public $organization;
 
@@ -60,7 +62,7 @@ class OrganizationOrdersIndex extends BaseIndex
         if($this->canResetDate) {
             $this->resetDates();
         }
-        $this->applyFilter();
+        $this->applyFilterExtension();
 
 //        $this->processBreakdown();
 
