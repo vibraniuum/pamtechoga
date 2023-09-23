@@ -36,7 +36,12 @@ class OrderController extends Controller
         $organization = $userOrganization->organization;
 
         $all_time = (bool)$request->query('all_time');
-        $statuses = $request->query('status') === 'DELIVERED' ? ['DELIVERED'] : ['PENDING', 'PROCESSING', 'DISPATCHED'];
+
+        $statuses = match ($request->query('status')) {
+            'DELIVERED' => ['DELIVERED'],
+            'CANCELLED' => ['CANCELLED'],
+            default => ['PENDING', 'PROCESSING', 'DISPATCHED'],
+        };
 
         if(!$all_time) {
             $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
