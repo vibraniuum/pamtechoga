@@ -51,7 +51,7 @@ class OrderController extends Controller
                 ->where('status', '<>', 'CANCELED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc')
-                ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
 
@@ -65,7 +65,7 @@ class OrderController extends Controller
 //                ->where('status', $status) all time should return regardless of status
                 ->where('status', '<>', 'CANCELED')
                 ->orderBy('created_at', 'desc')
-                ->with('product', 'organization', 'branch', 'driver', 'driver.truck')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
                 ->orderBy('created_at', 'desc')
                 ->paginate(50);
 

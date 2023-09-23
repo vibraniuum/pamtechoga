@@ -75,7 +75,7 @@ class PaymentController extends Controller
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->where('status', $status)
                 ->orderBy('created_at', 'desc')
-                ->with('organization')
+                ->with(['organization', 'customerOrder'])
                 ->paginate(50);
         } else {
             // -----------------
@@ -95,7 +95,7 @@ class PaymentController extends Controller
             $payments = Payment::where('organization_id', $organization->id)
                 ->where('status', $status)
                 ->orderBy('created_at', 'desc')
-                ->with('organization')
+                ->with(['organization', 'customerOrder'])
                 ->paginate(50);
         }
 
