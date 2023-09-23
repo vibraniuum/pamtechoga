@@ -36,14 +36,13 @@ class OrderController extends Controller
         $organization = $userOrganization->organization;
 
         $all_time = (bool)$request->query('all_time');
-        $status = $request->query('status');
+        $statuses = $request->query('status') === 'DELIVERED' ? ['DELIVERED'] : ['PENDING', 'PROCESSING', 'DISPATCHED'];
 
         if(!$all_time) {
             $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'))->startOfDay();
             $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'))->endOfDay();
-
             $orders = Order::where('organization_id', $organization->id)
-                ->where('status', $status)
+                ->whereIn('status', $statuses)
                 ->where('status', '<>', 'CANCELED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc')
