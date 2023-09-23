@@ -39,5 +39,11 @@ class TrucksForm extends Form
     {
         return Product::all();
     }
+    public function saved()
+    {
+        $this->model->chart = $this->model->getFirstMedia('Chart')->getUrl();
+        $this->model->save();
+    }
+
 
 }

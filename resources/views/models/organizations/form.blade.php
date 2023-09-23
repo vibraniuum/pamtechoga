@@ -10,7 +10,7 @@
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
     <x-slot name="actions">
-        @include('lego::models._includes.forms.page-actions')
+{{--        @include('lego::models._includes.forms.page-actions')--}}
     </x-slot>
     <x-lego::feedback.errors class="sh-mb-4" />
 

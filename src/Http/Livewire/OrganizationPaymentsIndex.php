@@ -21,10 +21,10 @@ class OrganizationPaymentsIndex extends BaseIndex
         return [
             'amount' => 'Amount Paid (NGN)',
             'status' => 'Payment Status',
-            'type' => 'Payment Type',
-            'organization' => 'Organization',
+//            'type' => 'Payment Type',
+//            'organization' => 'Organization',
             'payment_date' => 'Payment Made On',
-            'updated_at' => 'Last updated',
+//            'updated_at' => 'Last updated',
         ];
     }
 
@@ -35,7 +35,7 @@ class OrganizationPaymentsIndex extends BaseIndex
 
     public function render()
     {
-        return view('pamtechoga::models.payments.index', [
+        return view('pamtechoga::models.organizationPayments.index', [
 //            'models' => $this->getModels(),
             'models' => $this->getModelsModified(),
         ])->extends('lego::layouts.lego')->section('content');
@@ -49,7 +49,8 @@ class OrganizationPaymentsIndex extends BaseIndex
         $query = $this->model()::query()
             ->when($hasCustomOrderMethod, fn ($query) => $this->$customOrderMethod($query, $this->sortDirection))
             ->when(! $hasCustomOrderMethod && $this->sortColumn && $this->canSortColumn($this->sortColumn), fn ($query) => $query->orderBy($this->sortColumn, $this->sortDirection))
-            ->where('organization_id', $this->organization);
+            ->where('organization_id', $this->organization)
+            ->where('status', 'CONFIRMED');
 
         // Query main search column.
         if (! blank($this->searchQuery) && $this->canQueryMainSearchColumn()) {

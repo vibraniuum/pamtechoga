@@ -50,6 +50,12 @@
 
         <x-slot name="aside">
             @include('pamtechoga::models.components.timestamp')
+            <x-lego::media-panel :model="$model" />
+            <div class="mt-8">
+                @if($this->model->chart)
+                    <x-fab::elements.button type="link" :url="$this->model->chart" target="_blank">Preview Chart</x-fab::elements.button>
+                @endif
+            </div>
         </x-slot>
 
     </x-fab::layouts.main-with-aside>

@@ -18,7 +18,7 @@
         <dl class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Total Customer Orders Amount</dt>
-                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($totalCustomerOrdersAmount) }}</dd>
+{{--                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($totalCustomerOrdersAmount) }}</dd>--}}
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -52,7 +52,8 @@
         @include('lego::models._includes.indexes.header-filters')
         <x-fab::lists.table.header x-show="showColumnFilters" x-cloak class="bg-gray-100" />
 
-        @foreach($models->reject(function($item) { return $item->status === 'DELIVERED'; }) as $data)
+{{--        @foreach($models->reject(function($item) { return $item->status === 'DELIVERED'; }) as $data)--}}
+        @foreach($models as $data)
             <x-fab::lists.table.row :odd="$loop->odd">
                 @if($this->shouldShowColumn('organization_name'))
                     <x-fab::lists.table.column primary full>

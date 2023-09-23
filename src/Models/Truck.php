@@ -65,7 +65,6 @@ class Truck extends LegoModel implements Searchable, Mediable
     public function mediaCollections(): array
     {
         return [
-            MediaCollection::name('Photo')->maxFiles(1),
             MediaCollection::name('Chart')->maxFiles(1),
         ];
     }

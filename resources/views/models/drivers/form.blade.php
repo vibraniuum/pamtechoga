@@ -59,9 +59,13 @@
         </x-fab::layouts.panel>
 
         <x-slot name="aside">
-                @include('pamtechoga::models.components.timestamp')
-
+            @include('pamtechoga::models.components.timestamp')
             <x-lego::media-panel :model="$model" />
+            <div class="mt-8">
+                @if($this->model->photo)
+                    <x-fab::elements.button type="link" :url="$this->model->photo" target="_blank">Preview Photo</x-fab::elements.button>
+                @endif
+            </div>
         </x-slot>
 
     </x-fab::layouts.main-with-aside>

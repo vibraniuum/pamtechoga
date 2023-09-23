@@ -68,8 +68,8 @@
 
                 <x-fab::lists.table.column align="right" slim>
                     <a href="{{ route('lego.pamtechoga.organizations.edit', $organization) }}">Edit</a> •
-                    <a href="{{ route('lego.pamtechoga.organizations.organizationOrders', $organization) }}">Orders</a> •
-                    <a href="{{ route('lego.pamtechoga.organizations.organizationPayments', $organization) }}">Payments</a>
+                    <a href="{{ route('lego.pamtechoga.organizations.organizationOrders', $organization) }}">Breakdown</a> •
+{{--                    <a href="{{ route('lego.pamtechoga.organizations.organizationPayments', $organization) }}">Payments</a>--}}
                 </x-fab::lists.table.column>
             </x-fab::lists.table.row>
         @endforeach

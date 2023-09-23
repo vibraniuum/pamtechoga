@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Vibraniuum\Pamtechoga\Models\Branch;
+use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
@@ -188,5 +189,24 @@ class OrderController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function driverOrderCount($driverId)
+    {
+        $driver = Driver::where('id', $driverId)->first();
+
+        if(is_null($driver)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Driver not found',
+            ], 404);
+        }
+
+        $ordersCount = Order::where('driver_id', $driverId)->count();
+
+        return response()->json([
+            'status' => true,
+            'data' => $ordersCount
+        ]);
     }
 }

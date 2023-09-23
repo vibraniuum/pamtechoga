@@ -43,6 +43,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OldDriverTripsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrdersIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationOrdersIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationPaymentsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\OrganizationsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\PaymentDetailsForm;
@@ -171,6 +173,8 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         }
 
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-organizations-index', OrganizationsIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-organization-payments-index', OrganizationPaymentsIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-organization-orders-index', OrganizationOrdersIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-organizations-form', OrganizationsForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-branches-index', BranchesIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-branches-form', BranchesForm::class);
