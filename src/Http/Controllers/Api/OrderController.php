@@ -190,23 +190,4 @@ class OrderController extends Controller
             ], 500);
         }
     }
-
-    public function driverOrderCount($driverId)
-    {
-        $driver = Driver::where('id', $driverId)->first();
-
-        if(is_null($driver)) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Driver not found',
-            ], 404);
-        }
-
-        $ordersCount = Order::where('driver_id', $driverId)->count();
-
-        return response()->json([
-            'status' => true,
-            'data' => $ordersCount
-        ]);
-    }
 }

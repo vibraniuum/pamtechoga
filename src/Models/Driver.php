@@ -10,12 +10,20 @@ use Helix\Lego\Models\Contracts\Searchable;
 use Helix\Lego\Models\Model as LegoModel;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\SlugOptions;
+use Vibraniuum\Pamtechoga\Models\Order;
 
 class Driver extends LegoModel implements Searchable, Mediable
 {
     use HasMedia;
 
     protected $table = 'pamtechoga_drivers';
+
+    protected $appends = ['trips_count'];
+
+    public function getTripsCountAttribute()
+    {
+        return Order::where('driver_id', $this->id)->count();
+    }
 
     public static function icon(): string
     {

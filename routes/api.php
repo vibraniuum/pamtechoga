@@ -22,7 +22,6 @@ Route::post('/device-token', [DeviceController::class, 'saveDeviceToken'])->midd
 Route::apiResource('organizations', OrganizationController::class)->middleware('auth:sanctum');
 Route::apiResource('branches', BranchController::class)->middleware('auth:sanctum');
 Route::apiResource('orders', OrderController::class)->middleware('auth:sanctum');
-Route::get('/driver/orders-count/{driverId}', [OrderController::class, 'driverOrderCount'])->middleware('auth:sanctum');
 Route::apiResource('payments', PaymentController::class)->middleware('auth:sanctum');
 Route::get('/breakdown', [PaymentController::class, 'breakdown'])->middleware('auth:sanctum');
 Route::get('/payment-details', [PaymentController::class, 'paymentDetails'])->middleware('auth:sanctum');
