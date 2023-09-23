@@ -82,6 +82,28 @@ class OrderController extends Controller
         ]);
     }
 
+    public function allOrders(Request $request): JsonResponse
+    {
+        $user = auth()->user();
+
+        $userOrganization = OrganizationUser::where('user_id', $user->id)->first();
+
+        $organization = $userOrganization->organization;
+
+        $orders = Order::where('organization_id', $organization->id)
+//                ->where('status', $status) all time should return regardless of status
+            ->where('status', '<>', 'CANCELED')
+            ->orderBy('created_at', 'desc')
+            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+            ->orderBy('created_at', 'desc')
+            ->paginate(50);
+
+        return response()->json([
+            'status' => true,
+            'data' => $orders,
+        ]);
+    }
+
 
     /**
      * Display the specified resource.
