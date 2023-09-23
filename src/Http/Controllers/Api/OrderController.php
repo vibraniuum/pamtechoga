@@ -51,7 +51,7 @@ class OrderController extends Controller
                 ->where('status', '<>', 'CANCELED')
                 ->whereBetween('created_at', [$startDate, $endDate])
                 ->orderBy('created_at', 'desc')
-                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments', 'payments.organization')
                 ->paginate(50);
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
@@ -64,7 +64,7 @@ class OrderController extends Controller
 //                ->where('status', $status) all time should return regardless of status
                 ->where('status', '<>', 'CANCELED')
                 ->orderBy('created_at', 'desc')
-                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+                ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments', 'payments.organization')
                 ->paginate(50);
 
             $totalOrderAmount = Order::where('organization_id', $organization->id)
@@ -92,7 +92,7 @@ class OrderController extends Controller
 //                ->where('status', $status) all time should return regardless of status
             ->where('status', '<>', 'CANCELED')
             ->orderBy('created_at', 'desc')
-            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments', 'payments.organization')
             ->paginate(50);
 
         return response()->json([
@@ -116,7 +116,7 @@ class OrderController extends Controller
         $organization = $organizationUser->organization;
 
         $order = Order::where('id', $orderId)
-            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments')
+            ->with('product', 'organization', 'branch', 'driver', 'driver.truck', 'payments', 'payments.organization')
             ->first();
 
         if(is_null($order)) {
