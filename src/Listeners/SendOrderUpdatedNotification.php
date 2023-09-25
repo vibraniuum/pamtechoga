@@ -29,8 +29,8 @@ class SendOrderUpdatedNotification
         $title = '🎉 An order has been updated';
         $body = 'Login to view order details';
 
-        $devices = DeviceToken::where('organization_id', $event->data['organization_id'])->pluck('device_token');
+//        $devices = DeviceToken::where('organization_id', $event->data['organization_id'])->pluck('device_token');
 
-        resolve(PamtechPushNotifications::class)->sendNotification($title, $body, $devices);
+        resolve(PamtechPushNotifications::class)->sendNotification($title, $body);
     }
 }
