@@ -3,6 +3,8 @@
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Form;
+use Vibraniuum\Pamtechoga\Events\OrderUpdated;
+use Vibraniuum\Pamtechoga\Events\PaymentUpdated;
 use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
@@ -36,6 +38,13 @@ class PaymentsForm extends Form
     public function saving()
     {
         $this->model->user_id = auth()->id();
+    }
+
+    public function saved()
+    {
+        PaymentUpdated::dispatch([
+            'organization_id' => $this->model->organization_id
+        ]);
     }
 
     public function view()

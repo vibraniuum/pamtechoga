@@ -95,7 +95,7 @@ class PamtechogaServiceProvider extends PackageServiceProvider
                         [
                             Link::to(route('lego.pamtechoga.sales.index'), 'Sales'),
                             Link::to(route('lego.pamtechoga.payments.index'), 'Payments'),
-                            Link::to(route('lego.pamtechoga.payments.index'), 'Sales Breakdown'),
+//                            Link::to(route('lego.pamtechoga.payments.index'), 'Sales Breakdown'),
                         ],
                         Icon::CHART_BAR
                     )->after('Orders')

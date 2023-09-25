@@ -45,7 +45,9 @@ class OrdersForm extends Form
 
     public function saved()
     {
-        OrderUpdated::dispatch();
+        OrderUpdated::dispatch([
+            'organization_id' => $this->model->organization_id
+        ]);
     }
 
     public function model(): string
@@ -72,6 +74,5 @@ class OrdersForm extends Form
     {
         return Branch::query()->where('organization_id', $this->model?->organization_id)->get();
     }
-
 
 }

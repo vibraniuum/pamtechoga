@@ -101,7 +101,13 @@
                 <option value="DEPOT">DEPOT</option>
             </x-fab::forms.select>
 
-                @include('pamtechoga::models.components.timestamp')
+            @include('pamtechoga::models.components.timestamp')
+
+            <div class="mt-8">
+                @if($this->model->reference_photo)
+                    <x-fab::elements.button type="link" :url="$this->model->reference_photo" target="_blank">Preview proof of payment</x-fab::elements.button>
+                @endif
+            </div>
         </x-slot>
 
     </x-fab::layouts.main-with-aside>

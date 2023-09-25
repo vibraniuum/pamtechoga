@@ -6,9 +6,13 @@ use Vibraniuum\Pamtechoga\Models\DeviceToken;
 
 class PamtechPushNotifications
 {
-    public function sendNotification($title, $body)
+    public function sendNotification($title, $body, $devicesToSendTo = null)
     {
-        $devices = DeviceToken::all()->pluck('device_token');
+        if (is_null($devicesToSendTo)) {
+            $devices = DeviceToken::all()->pluck('device_token');
+        } else {
+            $devices = $devicesToSendTo;
+        }
 
         $SERVER_API_KEY = env('FCM_SERVER_KEY');
 

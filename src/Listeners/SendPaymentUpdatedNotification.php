@@ -3,10 +3,11 @@
 namespace Vibraniuum\Pamtechoga\Listeners;
 
 use Vibraniuum\Pamtechoga\Events\OrderUpdated;
+use Vibraniuum\Pamtechoga\Events\PaymentUpdated;
 use Vibraniuum\Pamtechoga\Models\DeviceToken;
 use Vibraniuum\Pamtechoga\Services\PamtechPushNotifications;
 
-class SendOrderUpdatedNotification
+class SendPaymentUpdatedNotification
 {
     /**
      * Create the event listener.
@@ -21,13 +22,13 @@ class SendOrderUpdatedNotification
     /**
      * Handle the event.
      *
-     * @param  OrderUpdated  $event
+     * @param  PaymentUpdated  $event
      * @return void
      */
-    public function handle(OrderUpdated $event)
+    public function handle(PaymentUpdated $event)
     {
-        $title = '🎉 An order has been updated';
-        $body = 'Login to view order details';
+        $title = '🎉 Payment status has been updated';
+        $body = 'Login to view payment details';
 
         $devices = DeviceToken::where('organization_id', $event->data['organization_id'])->pluck('device_token');
 
