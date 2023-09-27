@@ -6,12 +6,34 @@ use Helix\Fabrick\Icon;
 use Helix\Lego\Models\Contracts\Searchable;
 use Helix\Lego\Models\Model as LegoModel;
 use Helix\Lego\Models\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Payment extends LegoModel implements Searchable
 {
 
     protected $table = 'pamtechoga_payments';
+
+    protected $appends = ['overall_balance'];
+
+    public function getOverallBalanceAttribute()
+    {
+        $status = 'CONFIRMED';
+
+        $sumOfOverallOrdersAmount = Order::where('organization_id', $this->organization_id)
+            ->where('status', '<>', 'CANCELED')
+            ->select(DB::raw('SUM(volume * unit_price) AS total'))
+            ->first();
+
+        $sumOfOverallPaymentsAmount = Payment::where('organization_id', $this->organization_id)
+            ->where('status', $status)
+            ->sum('amount');
+
+        $totalDebtOwed = max($sumOfOverallOrdersAmount?->total - $sumOfOverallPaymentsAmount, 0);
+
+        return $totalDebtOwed;
+    }
 
     public static function icon(): string
     {
