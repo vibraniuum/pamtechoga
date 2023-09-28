@@ -17,6 +17,23 @@ class Order extends LegoModel implements Searchable
         "made_down_payment" => "boolean"
     ];
 
+    protected $appends = ['total_payment', 'balance'];
+
+    public function getTotalPaymentAttribute()
+    {
+        $totalPayment = Payment::where('customer_order_id', $this->id)->where('status', 'CONFIRMED')->sum('amount');
+        return $totalPayment;
+    }
+
+    public function getBalanceAttribute()
+    {
+        $orderAmount = $this->volume * $this->unit_price;
+        $totalPayment = Payment::where('customer_order_id', $this->id)->where('status', 'CONFIRMED')->sum('amount');
+        $balance = $orderAmount - $totalPayment;
+
+        return $balance;
+    }
+
     public static function icon(): string
     {
         return Icon::COLLECTION;

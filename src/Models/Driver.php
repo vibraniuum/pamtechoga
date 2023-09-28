@@ -23,7 +23,14 @@ class Driver extends LegoModel implements Searchable, Mediable
 
     public function getTripsCountAttribute()
     {
-        return Order::where('driver_id', $this->id)->count();
+        $oldTrips = OldDriverTrip::where('driver_id', $this->id)->first();
+        if(!is_null($oldTrips)) {
+            $numberOfOldTrips = $oldTrips->number_of_trips;
+        } else {
+            $numberOfOldTrips = 0;
+        }
+
+        return Order::where('driver_id', $this->id)->count() + $numberOfOldTrips;
     }
 
     public function getRatingsAttribute()
