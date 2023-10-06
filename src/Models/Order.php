@@ -101,6 +101,6 @@ class Order extends LegoModel implements Searchable
 
     public function payments()
     {
-       return $this->hasMany(Payment::class, 'customer_order_id', 'id');
+       return $this->hasMany(Payment::class, 'customer_order_id', 'id')->where('status', 'CONFIRMED');
     }
 }
