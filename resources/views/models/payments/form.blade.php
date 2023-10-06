@@ -21,6 +21,7 @@
                 wire:model="model.customer_order_id"
                 label="Organizations Order"
                 help="This is the order from an organization."
+                :disabled="$model->customer_order_id ? true : false"
             >
                 <option value="0">-- Choose Organization Order --</option>
                 @foreach($this->allCustomerOrders() as $data)
@@ -32,6 +33,7 @@
                 wire:model="model.organization_id"
                 label="Organization"
                 help="This is the organization making payment."
+                :disabled="$model->organization_id ? true : false"
             >
                 <option value="0">-- Choose Organization Order --</option>
                 @foreach($this->allOrganizations() as $data)
@@ -43,6 +45,7 @@
                 wire:model="model.depot_order_id"
                 label="Depot Order"
                 help="This is the order placed at the depot."
+                :disabled="$model->depot_order_id ? true : false"
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
