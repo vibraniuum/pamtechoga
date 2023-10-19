@@ -13,7 +13,7 @@ class TrucksForm extends Form
     public function rules()
     {
         return [
-            'model.product_id' => 'required',
+//            'model.product_id' => 'required',
             'model.plate_number' => 'required',
             'model.volume_capacity' => 'required',
             'model.available_volume' => 'required',

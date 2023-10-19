@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
@@ -47,8 +48,10 @@ class OrganizationOrdersIndex extends BaseIndex
             'volume' => 'Volume (Litres)',
             'unit_price' => 'Unit Price (NGN)',
             'amount' => 'Amount (NGN)',
+            'profit' => 'Profit (NGN)',
             'driver' => 'Driver',
             'status' => 'Status',
+            'action' => 'Action',
         ];
     }
 
@@ -169,6 +172,57 @@ class OrganizationOrdersIndex extends BaseIndex
 //            'total' => $totalPaymentsWithinRange ?? 0.0,
 //            'balance' => $balance ?? 0.0,
 //        ]);
+    }
+
+    public function calculateProfit($depot_order_id, $unit_price, $trucking_expense, $volume)
+    {
+        // Check if any of the input values are zero or null
+        if (!$depot_order_id || !$unit_price || !$trucking_expense || !$volume) {
+            return 0;
+        }
+
+        // Retrieve the DepotOrder by its ID
+        $depotOrder = DepotOrder::find($depot_order_id);
+
+        // Calculate the cost price for the depot order
+        $depotNewUnitPrice = $depotOrder->unit_price + $depotOrder->trucking_expense;
+        $orderCostPrice = $volume * $depotNewUnitPrice;
+
+        // Calculate the selling price for the order
+        $orderNewUnitPrice = $unit_price + $trucking_expense;
+        $orderSellingPrice = $volume * $orderNewUnitPrice;
+
+        // Calculate the profit
+        return $orderSellingPrice - $orderCostPrice;
+    }
+
+    public function calculateOverallProfit()
+    {
+        $overallProfit = 0;
+
+        foreach ($this->orders as $data) {
+            // Check if any of the input values are zero or null
+            if (!$data->depot_order_id || !$data->unit_price || !$data->trucking_expense || !$data->volume) {
+                continue;
+            }
+
+            // Retrieve the DepotOrder by its ID
+            $depotOrder = DepotOrder::find($data->depot_order_id);
+
+            // Calculate the cost price for the depot order
+            $depotNewUnitPrice = $depotOrder->unit_price + $depotOrder->trucking_expense;
+            $orderCostPrice = $data->volume * $depotNewUnitPrice;
+
+            // Calculate the selling price for the order
+            $orderNewUnitPrice = $data->unit_price + $data->trucking_expense;
+            $orderSellingPrice = $data->volume * $orderNewUnitPrice;
+
+            // Calculate the profit for this order and add it to the overall profit
+            $profit = $orderSellingPrice - $orderCostPrice;
+            $overallProfit += $profit;
+        }
+
+        return $overallProfit;
     }
 
 }

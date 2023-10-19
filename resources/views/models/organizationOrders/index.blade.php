@@ -129,9 +129,15 @@
                     </x-fab::lists.table.column>
                 @endif
 
+                @if($this->shouldShowColumn('profit'))
+                    <x-fab::lists.table.column>
+                        <span>{{ number_format($this->calculateProfit($data->depot_order_id, $data->unit_price, $data->trucking_expense, $data->volume)) }}</span>
+                    </x-fab::lists.table.column>
+                @endif
+
                 @if($this->shouldShowColumn('driver'))
                     <x-fab::lists.table.column>
-                        <span>{{ $data->driver->name }}</span>
+                        <span>{{ $data->driver?->name ?? 'Not set' }}</span>
                     </x-fab::lists.table.column>
                 @endif
 
@@ -142,9 +148,9 @@
                 @endif
 
 
-{{--                <x-fab::lists.table.column align="right" slim>--}}
-{{--                <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">Edit</a>--}}
-{{--                </x-fab::lists.table.column>--}}
+                <x-fab::lists.table.column align="right" slim>
+                <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">View</a>
+                </x-fab::lists.table.column>
             </x-fab::lists.table.row>
         @endforeach
         <x-fab::lists.table.row>
@@ -181,6 +187,12 @@
             @if($this->shouldShowColumn('amount'))
                 <x-fab::lists.table.column>
                     <span class="font-bold">{{ number_format($ordersAmountTotal?->total + $bfDebt) }}</span>
+                </x-fab::lists.table.column>
+            @endif
+
+            @if($this->shouldShowColumn('profit'))
+                <x-fab::lists.table.column>
+                    <span class="font-bold">{{ number_format($this->calculateOverallProfit()) }}</span>
                 </x-fab::lists.table.column>
             @endif
 
@@ -237,6 +249,7 @@
 
     <div class="mt-16">
         <div class="mt-8 text-xl font-semibold tracking-tight text-gray-900">{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Payments for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}</div>
+        <div class="mt-4 text-sm tracking-tight text-gray-500">Note: payments other than <span class="font-medium">"Confirmed"</span> are not part of the calculations</div>
 
         <div class="mt-8 relative overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
@@ -251,6 +264,9 @@
                     <th scope="col" class="px-6 py-3">
                         Status
                     </th>
+{{--                    <th scope="col" class="px-6 py-3">--}}
+{{--                        Action--}}
+{{--                    </th>--}}
                 </tr>
                 </thead>
                 <tbody>

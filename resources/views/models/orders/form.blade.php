@@ -12,10 +12,43 @@
     <x-slot name="actions">
         @include('lego::models._includes.forms.page-actions')
     </x-slot>
+
+    <div>
+        <dl class=" grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                <dt class="truncate text-sm font-medium text-gray-500">Profit</dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">NGN{{ $this->calculateValue('profit') }}</dd>
+            </div>
+
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                <dt class="truncate text-sm font-medium text-gray-500">Cost Price</dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">NGN{{ $this->calculateValue('costPrice') }}</dd>
+            </div>
+
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                <dt class="truncate text-sm font-medium text-gray-500">Selling Price</dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">NGN{{ $this->calculateValue('sellingPrice') }}</dd>
+            </div>
+        </dl>
+    </div>
+    <div class="mt-5"></div>
+
     <x-lego::feedback.errors class="sh-mb-4" />
 
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
+
+            <x-fab::forms.select
+                wire:model="model.depot_order_id"
+                label="Depot Order"
+                help="This is the product price to fulfill this order."
+                :disabled="$model->depot_order_id ? true : false"
+            >
+                <option value="0">-- Choose Depot Order --</option>
+                @foreach($this->allDepotOrders() as $data)
+                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->depot->name }} - {{ $data->volume }}(LITRES - NGN{{ $data->unit_price }} / LITRE) - {{ $data->created_at->toFormattedDateString() }} </option>
+                @endforeach
+            </x-fab::forms.select>
 
             <x-fab::forms.select
                 wire:model="model.product_id"
@@ -61,15 +94,27 @@
 
             <x-fab::forms.input
                 wire:model="model.unit_price"
-                label="Price per litre"
+                label="Price per litre (NGN)"
                 help="This is automatically set from the selected product's market price but can be edited after negotiations."
             />
 
-            <x-fab::forms.checkbox
-                wire:model="model.made_down_payment"
-                label="Was there a down payment?"
-                help="Check this if there is an associated down payment. Payment details can be added after the order is created."
+            <x-fab::forms.date-picker
+                wire:model="model.payment_deadline"
+                label="Payment Deadline Date"
+                help="Complete payment should be made on or before this date."
+                :options="[
+                    'dateFormat' => 'Y-m-d H:i',
+                    'altInput' => true,
+                    'altFormat' => 'D, M J, Y | G:i K',
+                    'enableTime' => true
+                ]"
             />
+
+{{--            <x-fab::forms.checkbox--}}
+{{--                wire:model="model.made_down_payment"--}}
+{{--                label="Was there a down payment?"--}}
+{{--                help="Check this if there is an associated down payment. Payment details can be added after the order is created."--}}
+{{--            />--}}
 
         </x-fab::layouts.panel>
 

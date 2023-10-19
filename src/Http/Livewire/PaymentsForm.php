@@ -28,6 +28,15 @@ class PaymentsForm extends Form
         ];
     }
 
+    public function updated($name, $value)
+    {
+        if($this->model->customer_order_id) {
+//            find organization for this order
+            $order = Order::where('id', $this->model->customer_order_id)->first();
+            $this->model->organization_id = $order->organization->id;
+        }
+    }
+
     public function mount($payment = null)
     {
         $this->setModel($payment);

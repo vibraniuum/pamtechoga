@@ -39,6 +39,9 @@
             @endforeach
         </dl>
     </div>
+    <div class="mt-4 flex justify-end">
+        <x-fab::elements.button type="button" wire:click="exportAsCSV">Export data as CSV</x-fab::elements.button>
+    </div>
     <div class="mt-8">
         @include('lego::models._includes.indexes.filters')
     </div>
@@ -69,19 +72,25 @@
 
                 @if($this->shouldShowColumn('volume'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ $data->volume }}</a>
-                    </x-fab::lists.table.column>
-                @endif
-
-                @if($this->shouldShowColumn('status'))
-                    <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ $data->status }}</a>
+                        <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ number_format($data->volume ?? 0) }}</a>
                     </x-fab::lists.table.column>
                 @endif
 
                 @if($this->shouldShowColumn('unit_price'))
                     <x-fab::lists.table.column>
                         <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ $data->unit_price }}</a>
+                    </x-fab::lists.table.column>
+                @endif
+
+                @if($this->shouldShowColumn('amount'))
+                    <x-fab::lists.table.column>
+                        <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ number_format($data->volume * $data->unit_price ?? 0) }}</a>
+                    </x-fab::lists.table.column>
+                @endif
+
+                @if($this->shouldShowColumn('status'))
+                    <x-fab::lists.table.column>
+                        <a href="{{ route('lego.pamtechoga.orders.edit', $data) }}">{{ $data->status }}</a>
                     </x-fab::lists.table.column>
                 @endif
 

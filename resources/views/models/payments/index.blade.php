@@ -46,7 +46,7 @@
             <x-fab::lists.table.row :odd="$loop->odd">
                 @if($this->shouldShowColumn('amount'))
                     <x-fab::lists.table.column primary full>
-                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ $data->amount }}</a>
+                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ number_format($data->amount) }}</a>
                     </x-fab::lists.table.column>
                 @endisset
 

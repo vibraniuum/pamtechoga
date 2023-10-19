@@ -5,6 +5,7 @@ namespace Vibraniuum\Pamtechoga\Http\Livewire;
 use Helix\Lego\Http\Livewire\Models\Form;
 use Vibraniuum\Pamtechoga\Events\OrderUpdated;
 use Vibraniuum\Pamtechoga\Models\Branch;
+use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
@@ -17,6 +18,7 @@ class OrdersForm extends Form
     public function rules()
     {
         return [
+            'model.depot_order_id' => 'nullable',
             'model.product_id' => 'required',
             'model.status' => 'required',
             'model.organization_id' => 'required',
@@ -24,7 +26,8 @@ class OrdersForm extends Form
             'model.volume' => 'required',
             'model.unit_price' => 'required',
             'model.driver_id' => 'nullable',
-            'model.made_down_payment' => 'required',
+//            'model.made_down_payment' => 'required',
+            'model.payment_deadline' => 'nullable',
             'model.trucking_expense' => 'nullable',
         ];
     }
@@ -33,7 +36,7 @@ class OrdersForm extends Form
     {
         $this->setModel($order);
         if (! $this->model->exists) {
-            $this->model->made_down_payment = false;
+//            $this->model->made_down_payment = false;
             $this->model->trucking_expense = 0.00;
         }
     }
@@ -53,6 +56,45 @@ class OrdersForm extends Form
     public function model(): string
     {
         return Order::class;
+    }
+
+    public function calculateValue($type)
+    {
+        // Check if all data needed for calculation are set
+        if (
+            $this->model->depot_order_id &&
+            $this->model->unit_price &&
+            $this->model->trucking_expense &&
+            $this->model->volume
+        ) {
+            // Retrieve the DepotOrder by its ID
+            $depotOrder = DepotOrder::find($this->model->depot_order_id);
+
+            // Calculate the cost price for the depot order
+            $depotNewUnitPrice = $depotOrder->unit_price + $depotOrder->trucking_expense;
+            $orderCostPrice = $this->model->volume * $depotNewUnitPrice;
+
+            // Calculate the selling price for the order
+            $orderNewUnitPrice = $this->model->unit_price + $this->model->trucking_expense;
+            $orderSellingPrice = $this->model->volume * $orderNewUnitPrice;
+
+            // Calculate and return the requested value based on the type
+            $value = match ($type) {
+                'profit' => $orderSellingPrice - $orderCostPrice,
+                'costPrice' => max($orderCostPrice, 0),
+                'sellingPrice' => max($orderSellingPrice, 0),
+                default => 0,
+            };
+
+            return number_format($value);
+        }
+
+        return 0;
+    }
+
+    public function allDepotOrders()
+    {
+        return DepotOrder::all();
     }
 
     public function allProducts()

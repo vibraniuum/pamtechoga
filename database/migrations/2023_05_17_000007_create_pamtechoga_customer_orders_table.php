@@ -16,6 +16,7 @@ class CreatePamtechogaCustomerOrdersTable extends Migration
         Schema::create('pamtechoga_customer_orders', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('product_id');
+            $table->integer('depot_order_id')->nullable();
             $table->enum('status', ['PENDING', 'PROCESSING', 'DISPATCHED', 'DELIVERED', 'CANCELED'])->default('PENDING');
             $table->integer('organization_id');
             $table->integer('branch_id')->nullable();
@@ -25,6 +26,7 @@ class CreatePamtechogaCustomerOrdersTable extends Migration
             $table->boolean('made_down_payment')->default(false);
             $table->float('trucking_expense')->default(0);
             $table->json('meta')->nullable();
+            $table->dateTime('payment_deadline')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
         });

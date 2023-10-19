@@ -31,7 +31,7 @@
 
                 @if($this->shouldShowColumn('market_price'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.products.edit', $data) }}">{{ $data->market_price }}</a>
+                        <a href="{{ route('lego.pamtechoga.products.edit', $data) }}">{{ number_format($data->market_price) }}</a>
                     </x-fab::lists.table.column>
                 @endif
 
