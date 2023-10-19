@@ -29,17 +29,17 @@
                 @endforeach
             </x-fab::forms.select>
 
-            <x-fab::forms.select
-                wire:model="model.organization_id"
-                label="Organization"
-                help="This is the organization making payment."
-                :disabled="true"
-            >
-                <option value="0">-- Choose Organization Order --</option>
-                @foreach($this->allOrganizations() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->name }} </option>
-                @endforeach
-            </x-fab::forms.select>
+{{--            <x-fab::forms.select--}}
+{{--                wire:model="model.organization_id"--}}
+{{--                label="Organization"--}}
+{{--                help="This is the organization making payment."--}}
+{{--                :disabled="true"--}}
+{{--            >--}}
+{{--                <option value="0">-- Choose Organization --</option>--}}
+{{--                @foreach($this->allOrganizations() as $data)--}}
+{{--                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->name }} </option>--}}
+{{--                @endforeach--}}
+{{--            </x-fab::forms.select>--}}
 
 {{--            <x-fab::forms.select--}}
 {{--                wire:model="model.depot_order_id"--}}
@@ -93,16 +93,16 @@
                 <option value="CANCELED">CANCELED</option>
             </x-fab::forms.select>
 
-{{--            <x-fab::forms.select--}}
-{{--                wire:model="model.type"--}}
-{{--                label="Payment Type"--}}
-{{--                help="This is the current status of this pickup."--}}
-{{--            >--}}
-{{--                <option value="OTHER">-- Choose Status</option>--}}
-{{--                <option value="DOWN PAYMENT">DOWN PAYMENT</option>--}}
-{{--                <option value="DEBT">DEBT</option>--}}
-{{--                <option value="DEPOT">DEPOT</option>--}}
-{{--            </x-fab::forms.select>--}}
+            <x-fab::forms.select
+                wire:model="model.type"
+                label="Payment Type"
+                help="This is the current status of this pickup."
+            >
+                <option value="OTHER">-- Choose Status</option>
+                <option value="DOWN PAYMENT">DOWN PAYMENT</option>
+                <option value="DEBT">DEBT</option>
+                <option value="DEPOT">DEPOT</option>
+            </x-fab::forms.select>
 
             @include('pamtechoga::models.components.timestamp')
 

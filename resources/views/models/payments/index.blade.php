@@ -64,7 +64,7 @@
 
                 @if($this->shouldShowColumn('organization'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ $data->organization->name }}</a>
+                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ $data->organization?->name }}</a>
                     </x-fab::lists.table.column>
                 @endif
 

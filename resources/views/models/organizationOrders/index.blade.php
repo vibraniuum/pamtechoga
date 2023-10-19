@@ -1,5 +1,5 @@
 <x-fab::layouts.page
-    title="Detailed Sales with {{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}"
+{{--    title="Detailed Sales with {{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}"--}}
     :breadcrumbs="[
         ['title' => 'Home', 'url' => route('lego.dashboard')],
         ['title' => 'Organizations','url' => route('lego.pamtechoga.organizations.index')],
@@ -18,7 +18,7 @@
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">All Time Debt Owed</dt>
-                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($totalDebtOwed) }}</dd>
+{{--                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($totalDebtOwed) }}</dd>--}}
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -264,9 +264,9 @@
                     <th scope="col" class="px-6 py-3">
                         Status
                     </th>
-{{--                    <th scope="col" class="px-6 py-3">--}}
-{{--                        Action--}}
-{{--                    </th>--}}
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
                 </tr>
                 </thead>
                 <tbody>
@@ -282,6 +282,9 @@
                         <td class="px-6 py-4">
                             {{ $data->status }}
                         </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">View</a>
+                        </td>
                     </tr>
                 @endforeach
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
@@ -295,6 +298,59 @@
 
                     </td>
                 </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <div class="mt-16">
+        <div class="mt-8 text-xl font-semibold tracking-tight text-gray-900">{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Unverified Payments for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}</div>
+        <div class="mt-4 text-sm tracking-tight text-gray-500">Note: payments here requires your <span class="font-medium">"attention"</span> and are not part of the calculations above</div>
+
+        <div class="mt-8 relative overflow-x-auto">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">
+                        Unverified Payment Made On
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Amount (NGN)
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Status
+                    </th>
+                    <th scope="col" class="px-6 py-3">
+                        Action
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+{{--                @dd($unverifiedPayments)--}}
+                @foreach($unverifiedPayments as $data)
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="px-6 py-4">
+                            {{ \Illuminate\Support\Carbon::make($data->payment_date)->toFormattedDateString() }}
+                        </td>
+                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                            {{ number_format($data->amount) }}
+                        </th>
+                        <td class="px-6 py-4">
+                            {{ $data->status }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">View</a>
+                        </td>
+                    </tr>
+                @endforeach
+                @if($unverifiedPayments->isEmpty())
+                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <td class="px-6 py-4 font-bold">
+                            No unverified payments at this time.
+                        </td>
+                    </tr>
+                @endif
                 </tbody>
             </table>
         </div>

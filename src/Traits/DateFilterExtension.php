@@ -17,6 +17,7 @@ trait DateFilterExtension
 {
     // breakdown
     public $payments;
+    public $unverifiedPayments;
     public $bfDebt = 0.0;
     public $totalPaymentsWithinRange = 0.0;
     public $totalPaymentsMade = 0.0;
@@ -101,6 +102,13 @@ trait DateFilterExtension
         $this->payments = Payment::where('organization_id', $organization->id)
             ->whereBetween('payment_date', [$this->startDate, $this->endDate])
             ->where('status', $status)
+            ->orderBy('created_at', 'desc')
+            ->with('organization')
+            ->get();
+
+        $this->unverifiedPayments = Payment::where('organization_id', $organization->id)
+            ->whereBetween('payment_date', [$this->startDate, $this->endDate])
+            ->where('status', '<>', $status)
             ->orderBy('created_at', 'desc')
             ->with('organization')
             ->get();
