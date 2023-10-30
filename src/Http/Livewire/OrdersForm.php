@@ -64,7 +64,6 @@ class OrdersForm extends Form
         if (
             $this->model->depot_order_id &&
             $this->model->unit_price &&
-            $this->model->trucking_expense &&
             $this->model->volume
         ) {
             // Retrieve the DepotOrder by its ID
@@ -75,8 +74,7 @@ class OrdersForm extends Form
             $orderCostPrice = $this->model->volume * $depotNewUnitPrice;
 
             // Calculate the selling price for the order
-            $orderNewUnitPrice = $this->model->unit_price + $this->model->trucking_expense;
-            $orderSellingPrice = $this->model->volume * $orderNewUnitPrice;
+            $orderSellingPrice = ($this->model->volume * $this->model->unit_price) + ($this->model->trucking_expense ?? 0);
 
             // Calculate and return the requested value based on the type
             $value = match ($type) {

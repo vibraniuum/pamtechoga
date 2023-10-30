@@ -1,5 +1,5 @@
 <x-fab::layouts.page
-{{--    title="Detailed Sales with {{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}"--}}
+    title="{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Orders and Payments Breakdown"
     :breadcrumbs="[
         ['title' => 'Home', 'url' => route('lego.dashboard')],
         ['title' => 'Organizations','url' => route('lego.pamtechoga.organizations.index')],
@@ -36,6 +36,13 @@
                     Payments for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}
                 </dt>
                 <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($totalPaymentsWithinRange) }}</dd>
+            </div>
+
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                <dt class="truncate text-sm font-medium text-gray-500">
+                    Profit: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}
+                </dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($this->calculateOverallProfit()) }}</dd>
             </div>
         </dl>
     </div>

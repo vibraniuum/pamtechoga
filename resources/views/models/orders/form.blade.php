@@ -46,7 +46,7 @@
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->depot->name }} - {{ $data->volume }}(LITRES - NGN{{ $data->unit_price }} / LITRE) - {{ $data->created_at->toFormattedDateString() }} </option>
+                    <option value="{{ $data->id }}">{{ $data->id }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }}) - {{ $data->created_at->toFormattedDateString() }} </option>
                 @endforeach
             </x-fab::forms.select>
 
@@ -134,7 +134,7 @@
             <x-fab::forms.input
                 wire:model="model.trucking_expense"
                 label="Trucking Expense (NGN)"
-                help="This is the cost per litre to transport the order volume."
+                help="This is any extra cost incurred for delivering this order. E.g. Toll Gate Fee, Breakdown repair, etc."
             />
 
         </x-fab::layouts.panel>

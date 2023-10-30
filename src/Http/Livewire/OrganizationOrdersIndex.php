@@ -184,7 +184,7 @@ class OrganizationOrdersIndex extends BaseIndex
     public function calculateProfit($depot_order_id, $unit_price, $trucking_expense, $volume)
     {
         // Check if any of the input values are zero or null
-        if (!$depot_order_id || !$unit_price || !$trucking_expense || !$volume) {
+        if (!$depot_order_id || !$unit_price || !$volume) {
             return 0;
         }
 
@@ -196,8 +196,7 @@ class OrganizationOrdersIndex extends BaseIndex
         $orderCostPrice = $volume * $depotNewUnitPrice;
 
         // Calculate the selling price for the order
-        $orderNewUnitPrice = $unit_price + $trucking_expense;
-        $orderSellingPrice = $volume * $orderNewUnitPrice;
+        $orderSellingPrice = ($volume * $unit_price) + ($trucking_expense ?? 0);
 
         // Calculate the profit
         return $orderSellingPrice - $orderCostPrice;
@@ -209,7 +208,7 @@ class OrganizationOrdersIndex extends BaseIndex
 
         foreach ($this->orders as $data) {
             // Check if any of the input values are zero or null
-            if (!$data->depot_order_id || !$data->unit_price || !$data->trucking_expense || !$data->volume) {
+            if (!$data->depot_order_id || !$data->unit_price || !$data->volume) {
                 continue;
             }
 
@@ -221,8 +220,7 @@ class OrganizationOrdersIndex extends BaseIndex
             $orderCostPrice = $data->volume * $depotNewUnitPrice;
 
             // Calculate the selling price for the order
-            $orderNewUnitPrice = $data->unit_price + $data->trucking_expense;
-            $orderSellingPrice = $data->volume * $orderNewUnitPrice;
+            $orderSellingPrice = ($data->volume * $data->unit_price) + ($data->trucking_expense ?? 0);
 
             // Calculate the profit for this order and add it to the overall profit
             $profit = $orderSellingPrice - $orderCostPrice;

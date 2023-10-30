@@ -62,7 +62,7 @@
 
         </x-fab::layouts.panel>
 
-        <x-fab::layouts.panel>
+        <x-fab::layouts.panel title="Assign Drivers">
 
             @foreach($extraData as $data)
 
