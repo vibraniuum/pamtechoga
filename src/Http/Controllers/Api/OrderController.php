@@ -8,6 +8,7 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Vibraniuum\Pamtechoga\Events\PamtechOrderSubmitted;
 use Vibraniuum\Pamtechoga\Listeners\SendPamtechOrderSubmittedNotification;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Driver;
@@ -176,9 +177,9 @@ class OrderController extends Controller
             $order = Order::create($request->all());
             $order = Order::where('id', $order->id)->first();
 
-            SendPamtechOrderSubmittedNotification::dispatch([
-                'organization' => $organization,
-                'product' => $order->product,
+            PamtechOrderSubmitted::dispatch([
+                'organization' => $organization->name,
+                'product' => $order->product->type,
                 'volume' => $order->volume,
                 'email' => $organization->email,
             ]);

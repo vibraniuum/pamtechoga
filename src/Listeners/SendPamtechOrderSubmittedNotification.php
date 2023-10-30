@@ -27,10 +27,10 @@ class SendPamtechOrderSubmittedNotification
      */
     public function handle(PamtechOrderSubmitted $event)
     {
-        Mail::send('emails.orders.submitted', [
+        Mail::send('emails.pamtechoga.submitted', [
             'organization' => $event->order['organization'],
             'product' => $event->order['product'],
-            'volume' => $event->order['volume'],
+            'volume' => number_format($event->order['volume']),
             'organizationEmail' => $event->order['email'],
         ], function($message) use ($event) {
             $message->to('oniicoder@gmail.com');

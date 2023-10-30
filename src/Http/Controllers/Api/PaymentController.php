@@ -8,6 +8,8 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Vibraniuum\Pamtechoga\Events\PamtechOrderSubmitted;
+use Vibraniuum\Pamtechoga\Events\PamtechPaymentSubmitted;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
@@ -184,6 +186,11 @@ class PaymentController extends Controller
             ]);
 
             $paymentResource = Payment::find($payment->id)->first();
+
+            PamtechPaymentSubmitted::dispatch([
+                'organization' => $organization->name,
+                'amount' => $paymentResource->amount,
+            ]);
 
             return response()->json([
                 'status' => true,
