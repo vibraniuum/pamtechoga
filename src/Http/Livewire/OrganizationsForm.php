@@ -6,6 +6,7 @@ use Helix\Lego\Http\Livewire\Models\Form;
 use Helix\Lego\Rules\SlugRule;
 use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Hash;
+use Vibraniuum\Pamtechoga\Events\OrganizationLoginInstructions;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Helix\Lego\Models\User;
@@ -130,6 +131,15 @@ class OrganizationsForm extends Form
     public function addBranchTextArea()
     {
         $this->branches->push(['id' => $this->branches->count(), 'address' => '']);
+    }
+
+    public function sendLoginInstructions()
+    {
+        OrganizationLoginInstructions::dispatch([
+            'email' => $this->model->email,
+        ]);
+
+        $this->confetti();
     }
 
 }

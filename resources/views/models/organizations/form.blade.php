@@ -11,6 +11,9 @@
 >
     <x-slot name="actions">
 {{--        @include('lego::models._includes.forms.page-actions')--}}
+        <div>
+            <x-fab::elements.button type="button" wire:click="sendLoginInstructions">Send login instructions</x-fab::elements.button>
+        </div>
     </x-slot>
     <x-lego::feedback.errors class="sh-mb-4" />
 
