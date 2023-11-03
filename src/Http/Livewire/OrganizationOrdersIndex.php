@@ -230,4 +230,76 @@ class OrganizationOrdersIndex extends BaseIndex
         return $overallProfit;
     }
 
+//    Export csv
+    public function exportAsCSV()
+    {
+        $organization = Organization::where('id', $this->organization)->first()->name;
+
+        // Generate your data to export (e.g., from a database query)
+        $data = [
+            [$organization . '\'s Orders'],
+            ['Date', 'Product', 'Volume', 'Unit Price', 'Amount', 'Driver', 'status'],
+        ];
+
+        $filename = $organization. '-orders-breakdown.csv';
+
+        $handle = fopen($filename, 'w');
+
+        // Write the header row
+        fputcsv($handle, $data[0]);
+        fputcsv($handle, $data[1]);
+
+        // Write the orders data rows
+        foreach ($this->orders as $order) {
+            $row = [];
+            $row[] = $order->created_at->format('Y-m-d');
+            $row[] = $order->product->type;
+            $row[] = number_format($order->volume);
+            $row[] = number_format($order->unit_price);
+            $row[] = number_format($order->unit_price * $order->volume);
+            $row[] = $order->driver?->name ?? '';
+            $row[] = $order->status;
+            fputcsv($handle, $row);
+        }
+
+        // Write payments data rows
+        $paymentsRow = [
+            [' '], // Empty rows
+            [$organization . '\'s Payments'],
+            ['Payment Date', 'Amount', 'Status'], // Header row,
+        ];
+
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[0]);
+        fputcsv($handle, $paymentsRow[1]);
+        fputcsv($handle, $paymentsRow[2]);
+
+        foreach ($this->payments as $payment) {
+            $row = [];
+            $row[] = Carbon::parse($payment->payment_date)->format('Y-m-d');
+            $row[] = number_format($payment->amount);
+            $row[] = $order->status;
+
+//            fputcsv($handle, $orders[$i]);
+            fputcsv($handle, $row);
+        }
+
+        fclose($handle);
+
+        return response()->stream(
+            function () use ($filename) {
+                readfile($filename);
+            },
+            200,
+            [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            ]
+        );
+    }
+
 }

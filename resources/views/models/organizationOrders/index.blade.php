@@ -47,7 +47,13 @@
         </dl>
     </div>
 
-    <div class="mt-8 text-xl font-semibold tracking-tight text-gray-900">{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Orders for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}</div>
+    <div class="flex justify-between items-center">
+        <div class="mt-8 text-xl font-semibold tracking-tight text-gray-900">{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Orders for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}</div>
+
+        <div class="mt-4 flex justify-end">
+            <x-fab::elements.button type="button" wire:click="exportAsCSV">Export data as CSV</x-fab::elements.button>
+        </div>
+    </div>
 
     <x-fab::lists.table class="mt-8">
         <x-slot name="headers">
