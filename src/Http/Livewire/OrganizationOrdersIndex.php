@@ -196,7 +196,7 @@ class OrganizationOrdersIndex extends BaseIndex
         $orderCostPrice = $volume * $depotNewUnitPrice;
 
         // Calculate the selling price for the order
-        $orderSellingPrice = ($volume * $unit_price) + ($trucking_expense ?? 0);
+        $orderSellingPrice = ($volume * $unit_price);
 
         // Calculate the profit
         return $orderSellingPrice - $orderCostPrice;
@@ -220,7 +220,7 @@ class OrganizationOrdersIndex extends BaseIndex
             $orderCostPrice = $data->volume * $depotNewUnitPrice;
 
             // Calculate the selling price for the order
-            $orderSellingPrice = ($data->volume * $data->unit_price) + ($data->trucking_expense ?? 0);
+            $orderSellingPrice = ($data->volume * $data->unit_price);
 
             // Calculate the profit for this order and add it to the overall profit
             $profit = $orderSellingPrice - $orderCostPrice;

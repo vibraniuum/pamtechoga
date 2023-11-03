@@ -74,7 +74,7 @@ class OrdersForm extends Form
             $orderCostPrice = $this->model->volume * $depotNewUnitPrice;
 
             // Calculate the selling price for the order
-            $orderSellingPrice = ($this->model->volume * $this->model->unit_price) + ($this->model->trucking_expense ?? 0);
+            $orderSellingPrice = ($this->model->volume * $this->model->unit_price);
 
             // Calculate and return the requested value based on the type
             $value = match ($type) {
