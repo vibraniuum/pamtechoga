@@ -27,10 +27,9 @@ class Order extends LegoModel implements Searchable
 
     public function getBalanceAttribute()
     {
-        return 11111;
-//        $orderAmount = (int) $this->volume ?? 1 * $this->unit_price ?? 1;
-//        $totalPayment = Payment::where('customer_order_id', $this->id)->where('status', 'CONFIRMED')->sum('amount');
-//        return $orderAmount - $totalPayment;
+        $orderAmount = (int) $this->volume * $this->unit_price;
+        $totalPayment = Payment::where('customer_order_id', $this->id)->where('status', 'CONFIRMED')->sum('amount');
+        return $orderAmount - $totalPayment;
     }
 
     public static function icon(): string
