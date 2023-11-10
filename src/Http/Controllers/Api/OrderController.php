@@ -184,7 +184,7 @@ class OrderController extends Controller
                 'email' => $organization->email,
                 'staff' => $user->name,
                 'branch' => $order->branch->address,
-                'link' => route('pamtechoga.orders.show', $order->id),
+                'link' => route('pamtechoga.orders.edit', $order->id),
             ]);
 
             return response()->json([

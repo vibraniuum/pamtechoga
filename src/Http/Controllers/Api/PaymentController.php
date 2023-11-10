@@ -190,6 +190,8 @@ class PaymentController extends Controller
             PamtechPaymentSubmitted::dispatch([
                 'organization' => $organization->name,
                 'amount' => $paymentResource->amount,
+                'staff' => $user->name,
+                'link' => route('pamtechoga.payments.edit', $paymentResource->id),
             ]);
 
             return response()->json([

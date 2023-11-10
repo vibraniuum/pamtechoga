@@ -31,6 +31,8 @@ class SendPamtechPaymentSubmittedNotification
         Mail::send('emails.pamtechoga.payment-submitted', [
             'organization' => $event->data['organization'],
             'amount' => number_format($event->data['amount']),
+            'staff' => $event->data['staff'],
+            'link' => $event->data['link'],
         ], function($message) use ($event) {
             $message->to('oniicoder@gmail.com');
             $message->from('contact@vibraniuumtech.com', 'New Pamtech OGA Payment');
