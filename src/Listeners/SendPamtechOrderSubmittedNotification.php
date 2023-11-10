@@ -32,6 +32,9 @@ class SendPamtechOrderSubmittedNotification
             'product' => $event->order['product'],
             'volume' => number_format($event->order['volume']),
             'organizationEmail' => $event->order['email'],
+            'staff' => $event->order['staff'],
+            'branch' => $event->order['branch'],
+            'link' => $event->order['link'],
         ], function($message) use ($event) {
             $message->to('oniicoder@gmail.com');
             $message->from('contact@vibraniuumtech.com', 'New Pamtech OGA Order');

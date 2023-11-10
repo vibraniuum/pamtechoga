@@ -182,6 +182,9 @@ class OrderController extends Controller
                 'product' => $order->product->type,
                 'volume' => $order->volume,
                 'email' => $organization->email,
+                'staff' => $user->name,
+                'branch' => $order->branch->address,
+                'link' => route('pamtechoga.orders.show', $order->id),
             ]);
 
             return response()->json([
