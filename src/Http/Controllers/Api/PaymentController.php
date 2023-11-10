@@ -191,7 +191,7 @@ class PaymentController extends Controller
                 'organization' => $organization->name,
                 'amount' => $paymentResource->amount,
                 'staff' => $user->name,
-                'link' => route('pamtechoga.payments.edit', $paymentResource->id),
+                'link' => route('lego.pamtechoga.payments.edit', $paymentResource->id),
             ]);
 
             return response()->json([
