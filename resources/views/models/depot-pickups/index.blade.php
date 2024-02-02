@@ -49,7 +49,7 @@
 
                 @if($this->shouldShowColumn('driver'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.depot-pickups.edit', $data) }}">{{ $data->driver->name }}</a>
+                        <a href="{{ route('lego.pamtechoga.depot-pickups.edit', $data) }}">{{ $data->driver?->name ?? 'no name set'}}</a>
                     </x-fab::lists.table.column>
                 @endif
 
