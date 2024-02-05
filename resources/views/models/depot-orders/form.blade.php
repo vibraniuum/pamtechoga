@@ -12,7 +12,7 @@
     <x-slot name="actions">
         @include('lego::models._includes.forms.page-actions')
     </x-slot>
-    <x-lego::feedback.errors class="sh-mb-4" />
+    <x-lego::feedback.errors class="sh-mb-4"/>
 
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
@@ -83,13 +83,15 @@
                         x-sortable.products.item="{{ $data->id }}"
                     >
                         <x-fab::lists.stacked.grouped-with-actions
-                            :title="$data?->driver?->name . '(' . $data?->driver->nickname . ')'"
+                            :title="$data?->driver?->name . '(' . $data?->driver?->nickname . ')'"
                             description="{{ $data->updated_at->toFormattedDateString() }} | {{ $data->status }}"
                         >
                             <x-slot name="avatar">
                                 <div class="flex">
-                                    <x-fab::elements.icon icon="dots-vertical" x-sortable.products.handle class="sh-h-5 sh-w-5 sh-text-gray-300 sh--mr-2" />
-                                    <x-fab::elements.icon icon="dots-vertical" x-sortable.products.handle class="sh-h-5 sh-w-5 sh-text-gray-300 sh--ml-1.5" />
+                                    <x-fab::elements.icon icon="dots-vertical" x-sortable.products.handle
+                                                          class="sh-h-5 sh-w-5 sh-text-gray-300 sh--mr-2"/>
+                                    <x-fab::elements.icon icon="dots-vertical" x-sortable.products.handle
+                                                          class="sh-h-5 sh-w-5 sh-text-gray-300 sh--ml-1.5"/>
                                 </div>
                             </x-slot>
                             <x-slot name="actions">
@@ -121,7 +123,7 @@
                 <option value="CANCELED">CANCELED</option>
             </x-fab::forms.select>
 
-                @include('pamtechoga::models.components.timestamp')
+            @include('pamtechoga::models.components.timestamp')
         </x-slot>
 
     </x-fab::layouts.main-with-aside>
