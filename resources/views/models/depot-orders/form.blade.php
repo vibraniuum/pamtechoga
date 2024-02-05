@@ -17,6 +17,18 @@
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
+            <x-fab::forms.date-picker
+                wire:model="model.order_date"
+                label="Order Date"
+                help="This is the date this order was placed."
+                :options="[
+                    'dateFormat' => 'Y-m-d H:i',
+                    'altInput' => true,
+                    'altFormat' => 'D, M J, Y | G:i K',
+                    'enableTime' => true
+                ]"
+            />
+
             <x-fab::forms.select
                 wire:model="model.product_id"
                 label="Product"
@@ -71,7 +83,7 @@
                         x-sortable.products.item="{{ $data->id }}"
                     >
                         <x-fab::lists.stacked.grouped-with-actions
-                            :title="$data?->driver?->name"
+                            :title="$data?->driver?->name . '(' . $data?->driver->nickname . ')'"
                             description="{{ $data->updated_at->toFormattedDateString() }} | {{ $data->status }}"
                         >
                             <x-slot name="avatar">

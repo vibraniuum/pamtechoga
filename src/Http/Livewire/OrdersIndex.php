@@ -33,7 +33,7 @@ class OrdersIndex extends BaseIndex
             'unit_price' => 'Unit Price (NGN)',
             'amount' => 'Amount (NGN)',
             'status' => 'Status',
-            'updated_at' => 'Last updated',
+            'order_date' => 'Date Ordered',
         ];
     }
 

@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     title="Depot Pickups"
     :breadcrumbs="[
@@ -53,9 +56,9 @@
                     </x-fab::lists.table.column>
                 @endif
 
-                @if($this->shouldShowColumn('updated_at'))
+                @if($this->shouldShowColumn('loaded_datetime'))
                     <x-fab::lists.table.column align="right">
-                        {{ $data->updated_at->toFormattedDateString() }}
+                        {{ Carbon::parse($data->loaded_datetime)->toFormattedDateString() }}
                     </x-fab::lists.table.column>
                 @endisset
 

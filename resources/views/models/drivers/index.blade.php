@@ -25,7 +25,7 @@
             <x-fab::lists.table.row :odd="$loop->odd">
                 @if($this->shouldShowColumn('name'))
                     <x-fab::lists.table.column primary full>
-                        <a href="{{ route('lego.pamtechoga.drivers.edit', $data) }}">{{ $data->name }}</a>
+                        <a href="{{ route('lego.pamtechoga.drivers.edit', $data) }}">{{ $data->name }} ({{ $data->nickname ?? '' }})</a>
                     </x-fab::lists.table.column>
                 @endisset
 

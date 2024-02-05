@@ -21,7 +21,7 @@ class DepotPickupsIndex extends BaseIndex
             'status' => 'Status',
             'unit_price' => 'Unit Price (NGN)',
             'driver' => 'Driver',
-            'updated_at' => 'Last updated',
+            'loaded_datetime' => 'Date Loaded',
         ];
     }
 

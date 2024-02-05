@@ -130,29 +130,35 @@ trait DateFilter
 
         $this->totalPMSDepotOrdersVolume = DepotOrder::join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_depot_orders.product_id')
             ->where('pamtechoga_depot_orders.status', '<>', 'CANCELED')
-            ->where('pamtechoga_products.type', 'PMS')
+            ->where('pamtechoga_products.type', 'LIKE', 'PMS%')
 //            ->whereBetween('pamtechoga_depot_orders.created_at', [$this->startDate, $this->endDate])
             ->sum('pamtechoga_depot_orders.volume');
+
+//        dd($this->totalPMSDepotOrdersVolume);
+
 
         $this->totalPMSDepotPickupsVolume = DepotPickup::join('pamtechoga_customer_orders', 'pamtechoga_customer_orders.id', '=', 'pamtechoga_depot_pickups.depot_order_id')
             ->join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
             ->where('pamtechoga_depot_pickups.status', '<>', 'CANCELED')
-            ->where('pamtechoga_products.type', 'PMS')
+            ->where('pamtechoga_products.type', 'LIKE', 'PMS%')
 //            ->whereBetween('pamtechoga_depot_pickups.created_at', [$this->startDate, $this->endDate])
             ->sum('pamtechoga_depot_pickups.volume_assigned');
 
         $this->totalVolumeOfPMSAtDepot = $this->totalPMSDepotOrdersVolume - $this->totalPMSDepotPickupsVolume;
 
+//        dd($this->totalPMSDepotOrdersVolume);
+
+
         $this->totalAGODepotOrdersVolume = DepotOrder::join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_depot_orders.product_id')
             ->where('pamtechoga_depot_orders.status', '<>', 'CANCELED')
-            ->where('pamtechoga_products.type', 'AGO')
+            ->where('pamtechoga_products.type', 'LIKE', 'AGO%')
 //            ->whereBetween('pamtechoga_products.created_at', [$this->startDate, $this->endDate])
             ->sum('pamtechoga_depot_orders.volume');
 
         $this->totalAGODepotPickupsVolume = DepotPickup::join('pamtechoga_customer_orders', 'pamtechoga_customer_orders.id', '=', 'pamtechoga_depot_pickups.depot_order_id')
             ->join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
             ->where('pamtechoga_depot_pickups.status', '<>', 'CANCELED')
-            ->where('pamtechoga_products.type', 'AGO')
+            ->where('pamtechoga_products.type', 'LIKE', 'AGO%')
 //            ->whereBetween('pamtechoga_products.created_at', [$this->startDate, $this->endDate])
             ->sum('pamtechoga_depot_pickups.volume_assigned');
 

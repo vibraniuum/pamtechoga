@@ -31,6 +31,7 @@ class SendOrganizationLoginInstructionsNotification
     {
         Mail::send('emails.pamtechoga.login-instructions', [
             'email' => $event->data['email'],
+            'organizationName' => $event->data['organizationName'],
         ], function($message) use ($event) {
             $message->to($event->data['email']);
             $message->from('contact@vibraniuumtech.com', 'Login instructions for Pamtech OGA');

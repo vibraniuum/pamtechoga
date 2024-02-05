@@ -32,7 +32,7 @@ class DepotOrdersIndex extends BaseIndex
             'volume' => 'Volume (Litres)',
             'status' => 'Status',
             'unit_price' => 'Unit Price (NGN)',
-            'updated_at' => 'Last updated',
+            'order_date' => 'Date Ordered',
         ];
     }
 

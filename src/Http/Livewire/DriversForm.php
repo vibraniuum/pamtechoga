@@ -15,6 +15,7 @@ class DriversForm extends Form
     {
         return [
             'model.name' => 'required',
+            'model.nickname' => 'nullable',
             'model.phone' => 'required',
             'model.email' => 'nullable',
             'model.address' => 'required',

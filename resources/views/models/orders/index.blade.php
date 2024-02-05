@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     title="Orders"
     :breadcrumbs="[
@@ -94,9 +97,9 @@
                     </x-fab::lists.table.column>
                 @endif
 
-                @if($this->shouldShowColumn('updated_at'))
+                @if($this->shouldShowColumn('date_ordered'))
                     <x-fab::lists.table.column align="right">
-                        {{ $data->updated_at->toFormattedDateString() }}
+                        {{ Carbon::parse($data->order_date)->toFormattedDateString() }}
                     </x-fab::lists.table.column>
                 @endisset
 

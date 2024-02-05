@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     :title="$model?->organization?->name ?: 'Untitled'"
     :breadcrumbs="[
@@ -38,6 +41,18 @@
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
+            <x-fab::forms.date-picker
+                wire:model="model.date_ordered"
+                label="Date of Order"
+                help="This is the date this order was placed."
+                :options="[
+                    'dateFormat' => 'Y-m-d',
+                    'altInput' => true,
+                    'altFormat' => 'D, M J, Y',
+                    'enableTime' => false
+                ]"
+            />
+
             <x-fab::forms.select
                 wire:model="model.depot_order_id"
                 label="Depot Order"
@@ -46,7 +61,7 @@
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}">{{ $data->id }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }}) - {{ $data->created_at->toFormattedDateString() }} </option>
+                    <option value="{{ $data->id }}"> - {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }})</option>
                 @endforeach
             </x-fab::forms.select>
 

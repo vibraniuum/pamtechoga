@@ -18,6 +18,7 @@ class CreatePamtechogaDepotsTable extends Migration
             $table->string('name');
             $table->text('address');
             $table->json('meta')->nullable();
+            $table->dateTime('order_date')->nullable();
             $table->dateTime('created_at')->nullable();
             $table->dateTime('updated_at')->nullable();
         });

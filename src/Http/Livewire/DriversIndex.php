@@ -16,7 +16,7 @@ class DriversIndex extends BaseIndex
     public function columns(): array
     {
         return [
-            'name' => 'Name',
+            'name' => 'Name (Nickname)',
             'phone' => 'Phone',
             'email' => 'Email',
             'truck' => 'Truck',

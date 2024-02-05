@@ -18,7 +18,7 @@ class DepotPickupsForm extends Form
             'model.status' => 'required',
             'model.driver_id' => 'required',
             'model.volume_assigned' => 'required',
-            'model.pickup_datetime' => 'nullable',
+//            'model.pickup_datetime' => 'nullable',
             'model.loaded_datetime' => 'nullable',
         ];
     }

@@ -28,17 +28,17 @@
                 @endforeach
             </x-fab::forms.select>
 
-            <x-fab::forms.date-picker
-                wire:model="model.pickup_datetime"
-                label="Date for pickup"
-                help="This is the datetime product should be picked up."
-                :options="[
-                    'dateFormat' => 'Y-m-d H:i',
-                    'altInput' => true,
-                    'altFormat' => 'D, M J, Y | G:i K',
-                    'enableTime' => true
-                ]"
-            />
+{{--            <x-fab::forms.date-picker--}}
+{{--                wire:model="model.pickup_datetime"--}}
+{{--                label="Date for pickup"--}}
+{{--                help="This is the datetime product should be picked up."--}}
+{{--                :options="[--}}
+{{--                    'dateFormat' => 'Y-m-d H:i',--}}
+{{--                    'altInput' => true,--}}
+{{--                    'altFormat' => 'D, M J, Y | G:i K',--}}
+{{--                    'enableTime' => true--}}
+{{--                ]"--}}
+{{--            />--}}
 
             <x-fab::forms.date-picker
                 wire:model="model.loaded_datetime"
@@ -63,7 +63,7 @@
             >
                 <option value="0">-- Choose Truck (can be assigned later)</option>
                 @foreach($this->allDrivers() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->name }} </option>
+                    <option value="{{ $data->id }}"> {{ $data->name }} ({{ $data->nickname ?? '' }}) </option>
                 @endforeach
             </x-fab::forms.select>
 

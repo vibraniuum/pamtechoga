@@ -24,6 +24,7 @@ class DepotOrdersForm extends Form
             'model.volume' => 'required',
             'model.unit_price' => 'required',
             'model.trucking_expense' => 'required',
+            'model.order_date' => 'required',
         ];
     }
 

@@ -10,8 +10,8 @@
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
     <x-slot name="actions">
-{{--        @include('lego::models._includes.forms.page-actions')--}}
-        <div>
+        @include('lego::models._includes.forms.page-actions')
+        <div class="pl-4">
             <x-fab::elements.button type="button" wire:click="sendLoginInstructions">Send login instructions</x-fab::elements.button>
         </div>
     </x-slot>
@@ -43,6 +43,32 @@
                 label="Email"
                 wire:model="model.email"
                 help="Contact email address of the organization"
+            />
+
+        </x-fab::layouts.panel>
+
+        <x-fab::layouts.panel title="Contact person">
+            <x-fab::forms.input
+                label="Name"
+                wire:model="model.contact_person_name"
+                help="Contact person's name of the organization."
+            />
+
+            <x-fab::forms.input
+                label="Phone"
+                wire:model="model.contact_person_phone"
+                help="Contact person's phone of the organization."
+            />
+
+            <x-fab::forms.date-picker
+                wire:model="model.contact_person_dob"
+                label="Date of Birth"
+                :options="[
+                    'dateFormat' => 'Y-m-d',
+                    'altInput' => true,
+                    'altFormat' => 'D, M J, Y',
+                    'enableTime' => false
+                ]"
             />
 
         </x-fab::layouts.panel>

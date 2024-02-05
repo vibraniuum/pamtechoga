@@ -16,6 +16,7 @@ class CreatePamtechogaDriversTable extends Migration
         Schema::create('pamtechoga_drivers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('nickname')->nullable();
             $table->string('phone');
             $table->string('email')->nullable();
             $table->string('address');

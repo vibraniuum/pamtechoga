@@ -18,6 +18,7 @@ class OrdersForm extends Form
     public function rules()
     {
         return [
+            'model.order_date' => 'nullable',
             'model.depot_order_id' => 'nullable',
             'model.product_id' => 'required',
             'model.status' => 'required',
@@ -92,7 +93,7 @@ class OrdersForm extends Form
 
     public function allDepotOrders()
     {
-        return DepotOrder::all();
+        return DepotOrder::orderBy('created_at', 'desc')->get();
     }
 
     public function allProducts()

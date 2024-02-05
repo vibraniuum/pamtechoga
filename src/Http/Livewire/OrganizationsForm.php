@@ -8,9 +8,13 @@ use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Support\Facades\Hash;
 use Vibraniuum\Pamtechoga\Events\OrganizationLoginInstructions;
 use Vibraniuum\Pamtechoga\Models\Branch;
+use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Helix\Lego\Models\User;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
+use Vibraniuum\Pamtechoga\Models\Payment;
+use Vibraniuum\Pamtechoga\Models\Review;
+use Vibraniuum\Pamtechoga\Models\SupportMessage;
 
 class OrganizationsForm extends Form
 {
@@ -33,6 +37,9 @@ class OrganizationsForm extends Form
             'model.slug' => [new SlugRule($this->model)],
             'model.phone' => 'required',
             'model.email' => 'required',
+            'model.contact_person_name' => 'nullable',
+            'model.contact_person_phone' => 'nullable',
+            'model.contact_person_dob' => 'nullable',
         ];
     }
 
@@ -123,6 +130,30 @@ class OrganizationsForm extends Form
         return 'pamtechoga::models.organizations.form';
     }
 
+    public function deleting()
+    {
+        // delete branches
+        Branch::where('organization_id', $this->model->id)->delete();
+
+        // delete customer orders
+        Order::where('organization_id', $this->model->id)->delete();
+
+        // delete payments
+        Payment::where('organization_id', $this->model->id)->delete();
+
+        // delete organization users
+        OrganizationUser::where('organization_id', $this->model->id)->delete();
+
+        // delete notifiacations
+
+        // delete reviews
+        Review::where('organization_id', $this->model->id)->delete();
+
+        // delete support messages
+        SupportMessage::where('organization_id', $this->model->id)->delete();
+
+    }
+
     public function model(): string
     {
         return Organization::class;
@@ -137,6 +168,7 @@ class OrganizationsForm extends Form
     {
         OrganizationLoginInstructions::dispatch([
             'email' => $this->model->email,
+            'organizationName' => $this->model->name,
         ]);
 
         $this->confetti();

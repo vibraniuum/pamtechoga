@@ -24,6 +24,12 @@
             />
 
             <x-fab::forms.input
+                wire:model="model.nickname"
+                label="Nickname"
+                help="Nickname of the driver."
+            />
+
+            <x-fab::forms.input
                 wire:model="model.phone"
                 label="Phone"
                 help="Phone number of the driver."

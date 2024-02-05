@@ -55,26 +55,26 @@
 
 {{--        $totalPMSDepotOrdersVolume = DepotOrder::join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_depot_orders.product_id')--}}
 {{--            ->where('pamtechoga_depot_orders.status', '<>', 'CANCELED')--}}
-{{--            ->where('pamtechoga_products.type', 'PMS')--}}
+{{--            ->where('pamtechoga_products.type', 'LIKE', 'PMS%')--}}
 {{--            ->sum('pamtechoga_depot_orders.volume');--}}
 
 {{--        $totalPMSDepotPickupsVolume = DepotPickup::join('pamtechoga_customer_orders','pamtechoga_customer_orders.id', '=', 'pamtechoga_depot_pickups.depot_order_id')--}}
 {{--            ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')--}}
 {{--            ->where('pamtechoga_depot_pickups.status', '<>', 'CANCELED')--}}
-{{--            ->where('pamtechoga_products.type', 'PMS')--}}
+{{--            ->where('pamtechoga_products.type', 'LIKE', 'PMS%')--}}
 {{--            ->sum('pamtechoga_depot_pickups.volume_assigned');--}}
 
 {{--        $totalVolumeOfPMSAtDepot = $totalPMSDepotOrdersVolume - $totalPMSDepotPickupsVolume;--}}
 
 {{--        $totalAGODepotOrdersVolume = DepotOrder::join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_depot_orders.product_id')--}}
 {{--            ->where('pamtechoga_depot_orders.status', '<>', 'CANCELED')--}}
-{{--            ->where('pamtechoga_products.type', 'AGO')--}}
+{{--            ->where('pamtechoga_products.type', 'LIKE', 'AGO%')--}}
 {{--            ->sum('pamtechoga_depot_orders.volume');--}}
 
 {{--        $totalAGODepotPickupsVolume = DepotPickup::join('pamtechoga_customer_orders','pamtechoga_customer_orders.id', '=', 'pamtechoga_depot_pickups.depot_order_id')--}}
 {{--            ->join('pamtechoga_products','pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')--}}
 {{--            ->where('pamtechoga_depot_pickups.status', '<>', 'CANCELED')--}}
-{{--            ->where('pamtechoga_products.type', 'AGO')--}}
+{{--            ->where('pamtechoga_products.type', 'LIKE', 'AGO%')--}}
 {{--            ->sum('pamtechoga_depot_pickups.volume_assigned');--}}
 
 {{--        $totalVolumeOfAGOAtDepot = $totalAGODepotOrdersVolume - $totalAGODepotPickupsVolume;--}}
