@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     title="{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Orders and Payments Breakdown"
     :breadcrumbs="[
@@ -114,7 +117,7 @@
 
                 @if($this->shouldShowColumn('date'))
                     <x-fab::lists.table.column align="right">
-                        {{ $data->created_at->toFormattedDateString() }}
+                        {{ Carbon::parse($data->order_date)->toFormattedDateString() }}
                     </x-fab::lists.table.column>
                 @endisset
 

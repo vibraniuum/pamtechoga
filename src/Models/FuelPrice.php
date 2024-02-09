@@ -37,4 +37,9 @@ class FuelPrice extends LegoModel implements Mediable
     {
         return 'company_name';
     }
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class);
+    }
 }

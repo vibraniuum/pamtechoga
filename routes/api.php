@@ -32,6 +32,7 @@ Route::apiResource('reviews', ReviewsController::class)->middleware('auth:sanctu
 Route::get('/order-reviews', [ReviewsController::class, 'orderReviews'])->middleware('auth:sanctum');
 
 Route::get('/fuel-prices', [DashboardController::class, 'fuelPrices'])->middleware('auth:sanctum');
+Route::get('/zones-and-stations', [DashboardController::class, 'zonesAndStations'])->middleware('auth:sanctum');
 
 Route::get('/dashboard/stats', [DashboardController::class, 'dashboard'])->middleware('auth:sanctum');
 

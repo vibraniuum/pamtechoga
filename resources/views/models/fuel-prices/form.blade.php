@@ -17,6 +17,17 @@
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
+            <x-fab::forms.select
+                wire:model="model.zone_id"
+                label="Zone"
+                help="This is the zone this filling station belongs to."
+            >
+                <option value="0">-- Choose Zone --</option>
+                @foreach($this->allZones() as $data)
+                    <option value="{{ $data->id }}">{{ $data->name }}</option>
+                @endforeach
+            </x-fab::forms.select>
+
             <x-fab::forms.input
                 wire:model="model.company_name"
                 label="Company Name"

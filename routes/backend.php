@@ -38,6 +38,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\SalesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\SalesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\TrucksForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\TrucksIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\ZonesForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\ZonesIndex;
 
 Route::group([
     'as' => 'pamtechoga.',
@@ -191,6 +193,16 @@ Route::group([
         Route::get('/', AnnouncementsIndex::class)->name('index');
         Route::get('/create', AnnouncementsForm::class)->name('create');
         Route::get('/{announcement}/edit', AnnouncementsForm::class)->name('edit');
+    });
+
+    // Zones
+    Route::group([
+        'as' => 'zones.',
+        'prefix' => 'zones/'
+    ], function() {
+        Route::get('/', ZonesIndex::class)->name('index');
+        Route::get('/create', ZonesForm::class)->name('create');
+        Route::get('/{zone}/edit', ZonesForm::class)->name('edit');
     });
 
 });

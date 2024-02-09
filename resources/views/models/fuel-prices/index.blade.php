@@ -29,6 +29,12 @@
                     </x-fab::lists.table.column>
                 @endisset
 
+                @if($this->shouldShowColumn('zone'))
+                    <x-fab::lists.table.column>
+                        <a href="{{ route('lego.pamtechoga.fuel-prices.edit', $data) }}">{{ $data->zone?->name }}</a>
+                    </x-fab::lists.table.column>
+                @endif
+
                 @if($this->shouldShowColumn('petrol'))
                     <x-fab::lists.table.column>
                         <a href="{{ route('lego.pamtechoga.fuel-prices.edit', $data) }}">{{ $data->petrol }}</a>

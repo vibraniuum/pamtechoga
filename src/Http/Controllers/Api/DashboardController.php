@@ -13,6 +13,7 @@ use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
 use Vibraniuum\Pamtechoga\Models\Product;
+use Vibraniuum\Pamtechoga\Models\Zone;
 
 /**
  * @group Order management
@@ -110,6 +111,16 @@ class DashboardController extends Controller
         return response()->json([
             'status' => true,
             'data' => $fuelPrices,
+        ]);
+    }
+
+    public function zonesAndStations(): JsonResponse
+    {
+        $stations = Zone::with('stations')->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => $stations,
         ]);
     }
 }

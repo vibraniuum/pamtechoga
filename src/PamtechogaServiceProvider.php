@@ -58,6 +58,8 @@ use Vibraniuum\Pamtechoga\Http\Livewire\SalesIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\Timestamp;
 use Vibraniuum\Pamtechoga\Http\Livewire\TrucksForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\TrucksIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\ZonesForm;
+use Vibraniuum\Pamtechoga\Http\Livewire\ZonesIndex;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Settings\PamtechogaSettings;
 
@@ -146,6 +148,12 @@ class PamtechogaServiceProvider extends PackageServiceProvider
                         ->icon(Icon::FOLDER_OPEN)
                         ->after('Models')
                 );
+                $menu->addToSection(
+                    Menu::MAIN_SECTIONS['PRIMARY'],
+                    Link::to(route('lego.pamtechoga.zones.index'), 'Zones')
+                        ->icon(Icon::FOLDER_OPEN)
+                        ->after('Fuel Prices')
+                );
             })
             ->backendRoutes(__DIR__.'/../routes/backend.php')
             ->apiRoutes(__DIR__.'/../routes/api.php')
@@ -207,6 +215,8 @@ class PamtechogaServiceProvider extends PackageServiceProvider
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-news-form', NewsForm::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-index', AnnouncementsIndex::class);
         Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-announcements-form', AnnouncementsForm::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-zones-index', ZonesIndex::class);
+        Livewire::component('astrogoat.pamtechoga.http.livewire.pamtechoga-zones-form', ZonesForm::class);
         Livewire::component('pamtechoga-datefilter-form', DateFilter::class);
         Livewire::component('pamtechoga-dashboard', Dashboard::class);
     }

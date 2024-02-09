@@ -5,6 +5,7 @@ namespace Vibraniuum\Pamtechoga\Http\Livewire;
 use Helix\Lego\Http\Livewire\Models\Form;
 use Vibraniuum\Pamtechoga\Events\FuelPriceUpdated;
 use Vibraniuum\Pamtechoga\Models\FuelPrice;
+use Vibraniuum\Pamtechoga\Models\Zone;
 
 class FuelPricesForm extends Form
 {
@@ -13,6 +14,7 @@ class FuelPricesForm extends Form
     public function rules()
     {
         return [
+            'model.zone_id' => 'required',
             'model.company_name' => 'required',
             'model.petrol' => 'required',
             'model.diesel' => 'nullable',
@@ -34,6 +36,11 @@ class FuelPricesForm extends Form
     public function model(): string
     {
         return FuelPrice::class;
+    }
+
+    public function allZones()
+    {
+        return Zone::all();
     }
 
     public function saved()

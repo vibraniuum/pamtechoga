@@ -3,37 +3,33 @@
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
 use Helix\Lego\Http\Livewire\Models\Index as BaseIndex;
-use Vibraniuum\Pamtechoga\Models\FuelPrice;
-use Vibraniuum\Pamtechoga\Models\PaymentDetail;
+use Vibraniuum\Pamtechoga\Models\Truck;
+use Vibraniuum\Pamtechoga\Models\Zone;
 
-class FuelPricesIndex extends BaseIndex
+class ZonesIndex extends BaseIndex
 {
 
     public function model(): string
     {
-        return FuelPrice::class;
+        return Zone::class;
     }
 
     public function columns(): array
     {
         return [
-            'company_name' => 'Account Name',
-            'zone' => 'Zone',
-            'petrol' => 'Petrol (NGN)',
-            'diesel' => 'Diesel (NGN)',
-            'premium' => 'Premium (NGN)',
+            'name' => 'Zone Name',
             'updated_at' => 'Last updated',
         ];
     }
 
     public function mainSearchColumn(): string|false
     {
-        return 'company_name';
+        return 'name';
     }
 
     public function render()
     {
-        return view('pamtechoga::models.fuel-prices.index', [
+        return view('pamtechoga::models.zones.index', [
             'models' => $this->getModels(),
         ])->extends('lego::layouts.lego')->section('content');
     }

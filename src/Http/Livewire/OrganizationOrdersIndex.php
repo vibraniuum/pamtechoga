@@ -43,7 +43,7 @@ class OrganizationOrdersIndex extends BaseIndex
         return [
 //            'organization_name' => 'Organization Name',
 
-            'date' => 'Date',
+            'date' => 'Order Date',
             'product' => 'Product Type',
             'volume' => 'Volume (Litres)',
             'unit_price' => 'Unit Price (NGN)',
@@ -252,7 +252,7 @@ class OrganizationOrdersIndex extends BaseIndex
         // Write the orders data rows
         foreach ($this->orders as $order) {
             $row = [];
-            $row[] = $order->created_at->format('Y-m-d');
+            $row[] = $order->order_date?->format('Y-m-d');
             $row[] = $order->product->type;
             $row[] = number_format($order->volume);
             $row[] = number_format($order->unit_price);
