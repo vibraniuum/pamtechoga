@@ -29,7 +29,7 @@ class OrdersIndex extends BaseIndex
         return [
             'organization_name' => 'Organization Name',
             'product' => 'Product',
-            'volume' => 'Volume (Litres)',
+            'volume' => 'Volume',
             'unit_price' => 'Unit Price (NGN)',
             'amount' => 'Amount (NGN)',
             'status' => 'Status',
