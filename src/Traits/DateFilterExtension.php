@@ -42,18 +42,18 @@ trait DateFilterExtension
          */
         $this->orders = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
-            ->whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->get();
 
         $this->ordersAmountTotal = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
-            ->whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
 
         $this->ordersVolumeTotal = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
-            ->whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->sum('volume');
 
         // -----------------
