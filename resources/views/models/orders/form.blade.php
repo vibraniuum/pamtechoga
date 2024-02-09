@@ -42,7 +42,7 @@
         <x-fab::layouts.panel>
 
             <x-fab::forms.date-picker
-                wire:model="model.date_ordered"
+                wire:model="model.order_date"
                 label="Date of Order"
                 help="This is the date this order was placed."
                 :options="[

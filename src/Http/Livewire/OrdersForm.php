@@ -18,7 +18,7 @@ class OrdersForm extends Form
     public function rules()
     {
         return [
-            'model.date_ordered' => 'nullable',
+            'model.order_date' => 'nullable',
             'model.depot_order_id' => 'nullable',
             'model.product_id' => 'required',
             'model.status' => 'required',
