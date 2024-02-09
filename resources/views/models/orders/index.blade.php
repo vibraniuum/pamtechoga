@@ -97,7 +97,7 @@
                     </x-fab::lists.table.column>
                 @endif
 
-                @if($this->shouldShowColumn('date_ordered'))
+                @if($this->shouldShowColumn('order_date'))
                     <x-fab::lists.table.column align="right">
                         {{ Carbon::parse($data->order_date)->toFormattedDateString() }}
                     </x-fab::lists.table.column>
