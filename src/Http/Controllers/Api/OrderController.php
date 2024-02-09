@@ -174,7 +174,10 @@ class OrderController extends Controller
             $organization = $organizationUser->organization;
             $request['organization_id'] = $organization->id;
 
-            $order = Order::create($request->all());
+            $order = Order::create([
+                ...$request->all(),
+                'order_date' => Carbon::now(),
+            ]);
             $order = Order::where('id', $order->id)->first();
 
             PamtechOrderSubmitted::dispatch([
