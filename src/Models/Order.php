@@ -97,6 +97,11 @@ class Order extends LegoModel implements Searchable
        return $this->belongsTo(Driver::class);
     }
 
+    public function orderDebt()
+    {
+        return $this->hasOne(OrderDebt::class);
+    }
+
     public function payments()
     {
        return $this->hasMany(Payment::class, 'customer_order_id', 'id')->where('status', 'CONFIRMED');

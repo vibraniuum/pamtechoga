@@ -19,6 +19,7 @@ class CreatePamtechogaOrganizationsTable extends Migration
             $table->string('slug');
             $table->string('phone');
             $table->string('email');
+            $table->double('credit', 16, 4);
             $table->string('contact_person_name')->nullable();
             $table->string('contact_person_phone')->nullable();
             $table->dateTime('contact_person_dob')->nullable();

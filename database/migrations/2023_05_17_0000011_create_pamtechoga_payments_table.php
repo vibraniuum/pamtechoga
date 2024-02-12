@@ -19,9 +19,9 @@ class CreatePamtechogaPaymentsTable extends Migration
             $table->integer('depot_order_id')->nullable(); // if payment is to a depot, attach depot order id
             $table->integer('organization_id'); // if payment is by an organization, attach organization ID
             $table->integer('user_id'); // track who created the record
-            $table->enum('status', ['PENDING', 'CONFIRMED', 'CANCELED'])->default('PENDING');
-            $table->enum('type', ['DOWN PAYMENT', 'DEBT', 'DEPOT', 'OTHER'])->default('OTHER');
-            $table->double('amount', 16, 2);
+            $table->enum('status', ['PENDING', 'CONFIRMED', 'CANCELED', 'REFUNDED'])->default('PENDING');
+            $table->enum('type', ['DOWN PAYMENT', 'DEBT', 'DEPOT', 'OTHER', 'CREDIT'])->default('OTHER');
+            $table->double('amount', 16, 4);
             $table->dateTime('payment_date');
             $table->text('reference_photo')->nullable();
             $table->text('reference_description')->nullable();

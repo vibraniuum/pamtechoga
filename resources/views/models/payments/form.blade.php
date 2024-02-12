@@ -10,7 +10,9 @@
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
     <x-slot name="actions">
-        @include('lego::models._includes.forms.page-actions')
+        @if($this->model->status === 'PENDING')
+            @include('lego::models._includes.forms.page-actions')
+        @endif
     </x-slot>
     <x-lego::feedback.errors class="sh-mb-4" />
 
@@ -18,40 +20,16 @@
         <x-fab::layouts.panel>
 
             <x-fab::forms.select
-                wire:model="model.customer_order_id"
+                wire:model="model.organization_id"
                 label="Organizations Order"
-                help="This is the order from an organization."
-                :disabled="$model->customer_order_id ? true : false"
+                help="This is the organization this payment is for."
+                :disabled="$model->id ? true : false"
             >
-                <option value="0">-- Choose Organization Order --</option>
-                @foreach($this->allCustomerOrders() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->organization->name }} - {{ $data->volume }}(LITRES) - {{ $data->created_at->toFormattedDateString() }} </option>
+                <option value="0">-- Choose Organization --</option>
+                @foreach($this->allOrganizations() as $data)
+                    <option value="{{ $data->id }}">{{ $data->name }}</option>
                 @endforeach
             </x-fab::forms.select>
-
-{{--            <x-fab::forms.select--}}
-{{--                wire:model="model.organization_id"--}}
-{{--                label="Organization"--}}
-{{--                help="This is the organization making payment."--}}
-{{--                :disabled="true"--}}
-{{--            >--}}
-{{--                <option value="0">-- Choose Organization --</option>--}}
-{{--                @foreach($this->allOrganizations() as $data)--}}
-{{--                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->name }} </option>--}}
-{{--                @endforeach--}}
-{{--            </x-fab::forms.select>--}}
-
-{{--            <x-fab::forms.select--}}
-{{--                wire:model="model.depot_order_id"--}}
-{{--                label="Depot Order"--}}
-{{--                help="This is the order placed at the depot."--}}
-{{--                :disabled="$model->depot_order_id ? true : false"--}}
-{{--            >--}}
-{{--                <option value="0">-- Choose Depot Order --</option>--}}
-{{--                @foreach($this->allDepotOrders() as $data)--}}
-{{--                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->depot->name }} - {{ $data->volume }}(LITRES) - {{ $data->created_at->toFormattedDateString() }} </option>--}}
-{{--                @endforeach--}}
-{{--            </x-fab::forms.select>--}}
 
         </x-fab::layouts.panel>
 
@@ -60,6 +38,7 @@
                 wire:model="model.amount"
                 label="Amount (NGN)"
                 help="Total value of this payment."
+                :disabled="$model->id ? true : false"
             />
 
             <x-fab::forms.date-picker
@@ -70,7 +49,7 @@
                     'dateFormat' => 'Y-m-d H:i',
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y | G:i K',
-                    'enableTime' => true
+                    'enableTime' => true,
                 ]"
             />
 
@@ -82,27 +61,47 @@
         </x-fab::layouts.panel>
 
         <x-slot name="aside">
-            <x-fab::forms.select
-                wire:model="model.status"
-                label="Payment Status"
-                help="This is the current status of this payment."
-            >
-                <option value="PENDING">-- Choose Status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="CONFIRMED">CONFIRMED</option>
-                <option value="CANCELED">CANCELED</option>
-            </x-fab::forms.select>
+{{--            <x-fab::forms.select--}}
+{{--                wire:model="model.status"--}}
+{{--                label="Payment Status"--}}
+{{--                help="This is the current status of this payment."--}}
+{{--                :disabled="true"--}}
+{{--            >--}}
+{{--                <option value="PENDING">-- Choose Status</option>--}}
+{{--                <option value="PENDING">PENDING</option>--}}
+{{--                <option value="CONFIRMED">CONFIRMED</option>--}}
+{{--                <option value="CANCELED">CANCELED</option>--}}
+{{--            </x-fab::forms.select>--}}
 
-            <x-fab::forms.select
-                wire:model="model.type"
-                label="Payment Type"
-                help="This is the current status of this pickup."
-            >
-                <option value="OTHER">-- Choose Status</option>
-                <option value="DOWN PAYMENT">DOWN PAYMENT</option>
-                <option value="DEBT">DEBT</option>
-                <option value="DEPOT">DEPOT</option>
-            </x-fab::forms.select>
+            @if($this->model->id)
+                <x-fab::forms.input
+                    wire:model="model.status"
+                    label="Payment Status"
+                    help="This is the current status of this payment."
+                    disabled
+                />
+            @endif
+
+            <div class="mt-4">
+                @if($this->model->status === 'PENDING')
+                    <x-fab::elements.button type="button" wire:click="markAsConfirmed">Mark as CONFIRMED</x-fab::elements.button>
+                @endif
+
+                @if($this->model->status === 'CONFIRMED')
+                    <x-fab::elements.button type="button" wire:click="markAsRefunded">Mark as REFUNDED</x-fab::elements.button>
+                @endif
+            </div>
+
+{{--            <x-fab::forms.select--}}
+{{--                wire:model="model.type"--}}
+{{--                label="Payment Type"--}}
+{{--                help="This is the current status of this pickup."--}}
+{{--                disabled--}}
+{{--            >--}}
+{{--                <option value="OTHER">-- Choose Status</option>--}}
+{{--                <option value="DOWN PAYMENT">DOWN PAYMENT</option>--}}
+{{--                <option value="DEBT">DEBT</option>--}}
+{{--            </x-fab::forms.select>--}}
 
             @include('pamtechoga::models.components.timestamp')
 

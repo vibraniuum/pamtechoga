@@ -8,8 +8,10 @@ use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Order;
+use Vibraniuum\Pamtechoga\Models\OrderDebt;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\Product;
+use Vibraniuum\Pamtechoga\Services\ConfirmPayment;
 
 class OrdersForm extends Form
 {
@@ -37,7 +39,7 @@ class OrdersForm extends Form
     {
         $this->setModel($order);
         if (! $this->model->exists) {
-//            $this->model->made_down_payment = false;
+            $this->model->status = 'PENDING';
             $this->model->trucking_expense = 0.00;
         }
     }
@@ -45,6 +47,12 @@ class OrdersForm extends Form
     public function view()
     {
         return 'pamtechoga::models.orders.form';
+    }
+
+    public function saving()
+    {
+        if(is_null($this->model->status))
+        $this->model->status = 'PENDING';
     }
 
     public function saved()
@@ -81,6 +89,7 @@ class OrdersForm extends Form
             $value = match ($type) {
                 'profit' => $orderSellingPrice - $orderCostPrice,
                 'costPrice' => max($orderCostPrice, 0),
+//                'sellingPrice' => max($orderSellingPrice, 0) + ((float) $this->model->trucking_expense ?? 0),
                 'sellingPrice' => max($orderSellingPrice, 0),
                 default => 0,
             };
@@ -89,6 +98,36 @@ class OrdersForm extends Form
         }
 
         return 0;
+    }
+
+    public function markAsProcessing()
+    {
+        $this->model->status = 'PROCESSING';
+        $this->model->save();
+
+        // save order as debt
+        OrderDebt::create([
+            'organization_id' => $this->model->organization_id,
+            'order_id' => $this->model->id,
+//            'balance' => ($this->model->volume * $this->model->unit_price) + $this->model->trucking_expense,
+            'balance' => ($this->model->volume * $this->model->unit_price), // with no trucking expense
+        ]);
+
+        $this->confetti();
+    }
+
+    public function markAsDispatched()
+    {
+        $this->model->status = 'DISPATCHED';
+        $this->model->save();
+        $this->confetti();
+    }
+
+    public function markAsDelivered()
+    {
+        $this->model->status = 'DELIVERED';
+        $this->model->save();
+        $this->confetti();
     }
 
     public function allDepotOrders()

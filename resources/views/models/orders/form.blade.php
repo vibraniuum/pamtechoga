@@ -32,6 +32,16 @@
                 <dt class="truncate text-sm font-medium text-gray-500">Selling Price</dt>
                 <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">NGN{{ $this->calculateValue('sellingPrice') }}</dd>
             </div>
+
+            @php
+                $orderDebt = \Vibraniuum\Pamtechoga\Models\OrderDebt::where('order_id', $this->model->id)->first();
+            @endphp
+            @if($this->model->id && $orderDebt)
+                <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                    <dt class="truncate text-sm font-medium text-gray-500">Debt Owed on this Order</dt>
+                    <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">NGN{{ number_format($orderDebt->balance) }}</dd>
+                </div>
+            @endif
         </dl>
     </div>
     <div class="mt-5"></div>
@@ -105,12 +115,14 @@
                 wire:model="model.volume"
                 label="Volume (Litre)"
                 help="This is the volume of selected product to be delivered."
+                :disabled="$model->status != 'PENDING' ? true : false"
             />
 
             <x-fab::forms.input
                 wire:model="model.unit_price"
                 label="Price per litre (NGN)"
                 help="This is automatically set from the selected product's market price but can be edited after negotiations."
+                :disabled="$model->status != 'PENDING' ? true : false"
             />
 
             <x-fab::forms.date-picker
@@ -139,6 +151,7 @@
                 wire:model="model.driver_id"
                 label="Driver"
                 help="This is the assigned driver to deliver the order. It can be ignored and assigned later."
+                :disabled="$model->status != 'PENDING' ? true : false"
             >
                 <option value="0">-- Choose Truck (can be assigned later)</option>
                 @foreach($this->allDrivers() as $data)
@@ -150,25 +163,49 @@
                 wire:model="model.trucking_expense"
                 label="Trucking Expense (NGN)"
                 help="This is any extra cost incurred for delivering this order. E.g. Toll Gate Fee, Breakdown repair, etc."
+                :disabled="$model->status != 'PENDING' ? true : false"
             />
 
         </x-fab::layouts.panel>
 
         <x-slot name="aside">
-            <x-fab::forms.select
-                wire:model="model.status"
-                label="Status"
-                help="This is the current status of this order."
-            >
-                <option value="PENDING">-- Choose Status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="PROCESSING">PROCESSING</option>
-                <option value="DISPATCHED">DISPATCHED</option>
-                <option value="DELIVERED">DELIVERED</option>
-                <option value="CANCELED">CANCELED</option>
-            </x-fab::forms.select>
+{{--            <x-fab::forms.select--}}
+{{--                wire:model="model.status"--}}
+{{--                label="Status"--}}
+{{--                help="This is the current status of this order."--}}
+{{--            >--}}
+{{--                <option value="PENDING">-- Choose Status</option>--}}
+{{--                <option value="PENDING">PENDING</option>--}}
+{{--                <option value="PROCESSING">PROCESSING</option>--}}
+{{--                <option value="DISPATCHED">DISPATCHED</option>--}}
+{{--                <option value="DELIVERED">DELIVERED</option>--}}
+{{--                <option value="CANCELED">CANCELED</option>--}}
+{{--            </x-fab::forms.select>--}}
+            @if($this->model->id)
+                <x-fab::forms.input
+                    wire:model="model.status"
+                    label="Order Status"
+                    help="This is the current status of this order."
+                    disabled
+                />
+            @endif
 
-                @include('pamtechoga::models.components.timestamp')
+            <div class="mt-4">
+                @if($this->model->status === 'PENDING' && $this->model->id)
+                    <x-fab::elements.button type="button" wire:click="markAsProcessing">Mark as PROCESSING</x-fab::elements.button>
+                @endif
+
+                @if($this->model->status === 'PROCESSING' && $this->model->id)
+                    <x-fab::elements.button type="button" wire:click="markAsDispatched">Mark as DISPATCHED</x-fab::elements.button>
+                    <x-fab::elements.button type="button" wire:click="markAsDelivered">Mark as DELIVERED</x-fab::elements.button>
+                @endif
+
+                @if($this->model->status === 'DISPATCHED' && $this->model->id)
+                    <x-fab::elements.button type="button" wire:click="markAsDelivered">Mark as DELIVERED</x-fab::elements.button>
+                @endif
+            </div>
+
+            @include('pamtechoga::models.components.timestamp')
         </x-slot>
 
     </x-fab::layouts.main-with-aside>

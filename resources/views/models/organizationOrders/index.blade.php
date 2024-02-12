@@ -13,7 +13,7 @@
 {{--        @include('lego::models._includes.indexes.filters')--}}
 
     <div>
-        <livewire:pamtechoga-datefilter-form />
+        <livewire:pamtechoga-datefilter-form/>
     </div>
 
     <div>
@@ -21,7 +21,18 @@
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">All Time Debt Owed</dt>
-{{--                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($totalDebtOwed) }}</dd>--}}
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format(\Vibraniuum\Pamtechoga\Models\OrderDebt::where('organization_id', $this->organization)->sum('balance')) }}</dd>
+            </div>
+
+            <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                @php
+                    $credit = \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->credit;
+                @endphp
+                <dt class="truncate text-sm font-medium text-gray-500">Credit</dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($credit) }}</dd>
+                @if($credit > 0)
+                    <x-fab::elements.button class="mt-2" type="button" wire:click="payFromCredit">Pay from Credit</x-fab::elements.button>
+                @endif
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -151,6 +162,12 @@
                     </x-fab::lists.table.column>
                 @endif
 
+                @if($this->shouldShowColumn('still_owing'))
+                    <x-fab::lists.table.column>
+                        <span>{{ $data->payment_is_complete ? 'No' : 'Yes' }}</span>
+                    </x-fab::lists.table.column>
+                @endif
+
                 @if($this->shouldShowColumn('driver'))
                     <x-fab::lists.table.column>
                         <span>{{ $data->driver?->name ?? 'Not set' }}</span>
@@ -275,6 +292,9 @@
                         Payment Made On
                     </th>
                     <th scope="col" class="px-6 py-3">
+                        Type
+                    </th>
+                    <th scope="col" class="px-6 py-3">
                         Amount (NGN)
                     </th>
                     <th scope="col" class="px-6 py-3">
@@ -286,14 +306,20 @@
                 </tr>
                 </thead>
                 <tbody>
-{{--                @dd($payments)--}}
                 @foreach($payments as $data)
                     <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                         <td class="px-6 py-4">
                             {{ \Illuminate\Support\Carbon::make($data->payment_date)->toFormattedDateString() }}
                         </td>
+                        <td class="px-6 py-4">
+                            {{ $data->type }}
+                        </td>
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                            {{ number_format($data->amount) }}
+                            @if($data->type === 'CREDIT')
+                                <span class="text-gray-400">{{ number_format($data->amount) }}</span>
+                            @else
+                                {{ number_format($data->amount) }}
+                            @endif
                         </th>
                         <td class="px-6 py-4">
                             {{ $data->status }}
@@ -304,6 +330,7 @@
                     </tr>
                 @endforeach
                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td></td>
                     <td class="px-6 py-4 font-bold">
                         Total
                     </td>

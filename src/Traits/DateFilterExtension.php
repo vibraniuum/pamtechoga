@@ -24,6 +24,7 @@ trait DateFilterExtension
     public $balance = 0.0;
     public $totalDebtOwed = 0.0;
     public $orders;
+    public $ordersForBreakdown;
     public $ordersAmountTotal = 0.0;
     public $ordersVolumeTotal = 0.0;
 
@@ -42,35 +43,41 @@ trait DateFilterExtension
          */
         $this->orders = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
+            ->where('status', '<>', 'PENDING')
             ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->get();
 
         $this->ordersAmountTotal = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
+            ->where('status', '<>', 'PENDING')
             ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
 
         $this->ordersVolumeTotal = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
+            ->where('status', '<>', 'PENDING')
             ->whereBetween('order_date', [$this->startDate, $this->endDate])
             ->sum('volume');
 
         // -----------------
         $sumOfOrdersAmountBeforeStartDate = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
-//            ->where('pamtechoga_customer_orders.created_at', '<', $this->startDate)
+            ->where('status', '<>', 'PENDING')
+//            ->where('pamtechoga_customer_orders.order_date', '<', $this->startDate)
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
 
         $sumOfPaymentsBeforeStartDate = Payment::where('organization_id', $organization->id)
             ->where('status', $status)
+            ->where('type', '<>', 'CREDIT')
 //            ->where('payment_date', '<', $this->startDate)
             ->sum('amount');
 
         $sumOfOrdersAmountBeforeStartDateForBF = Order::where('organization_id', $organization->id)
             ->where('status', '<>', 'CANCELED')
-            ->where('pamtechoga_customer_orders.created_at', '<', $this->startDate)
+            ->where('status', '<>', 'PENDING')
+            ->where('pamtechoga_customer_orders.order_date', '<', $this->startDate)
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
 
@@ -84,12 +91,14 @@ trait DateFilterExtension
         $this->totalPaymentsWithinRange = Payment::where('organization_id', $organization->id)
             ->whereBetween('payment_date', [$this->startDate, $this->endDate])
             ->where('status', $status)
+            ->where('type', '<>', 'CREDIT')
             ->sum('amount');
 
 //        dd($sumOfOrdersAmountBeforeStartDateForBF?->total, $this->totalPaymentsWithinRange);
 
         $this->totalPaymentsMade = Payment::where('organization_id', $organization->id)
             ->where('status', $status)
+            ->where('type', '<>', 'CREDIT')
             ->sum('amount');
 
         $this->totalDebtOwed = max($sumOfOrdersAmountBeforeStartDate?->total - $sumOfPaymentsBeforeStartDate, 0);
@@ -102,14 +111,14 @@ trait DateFilterExtension
         $this->payments = Payment::where('organization_id', $organization->id)
             ->whereBetween('payment_date', [$this->startDate, $this->endDate])
             ->where('status', $status)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('payment_date', 'desc')
             ->with('organization')
             ->get();
 
         $this->unverifiedPayments = Payment::where('organization_id', $organization->id)
             ->whereBetween('payment_date', [$this->startDate, $this->endDate])
             ->where('status', '<>', $status)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('payment_date', 'desc')
             ->with('organization')
             ->get();
         // end

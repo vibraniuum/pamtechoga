@@ -18,13 +18,16 @@
 
     <div>
         <dl class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            @php
+                $debt = \Vibraniuum\Pamtechoga\Models\OrderDebt::sum('balance');
+            @endphp
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                <dt class="truncate text-sm font-medium text-gray-500">Total Organizational Debts Amount</dt>
-                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($totalDebt) }}</dd>
+                <dt class="truncate text-sm font-medium text-gray-500">Total Organizations Debts Amount</dt>
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($debt) }}</dd>
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                <dt class="truncate text-sm font-medium text-gray-500">Total Organizational Amount Paid</dt>
+                <dt class="truncate text-sm font-medium text-gray-500">Total Organizations Amount Paid</dt>
                 <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">₦{{ number_format($totalConfirmedPayment) }}</dd>
             </div>
         </dl>

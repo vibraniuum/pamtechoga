@@ -29,6 +29,6 @@ class CreatePamtechogaZonesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pamtechoga_reviews');
+        Schema::dropIfExists('pamtechoga_zones');
     }
 }

@@ -68,7 +68,7 @@ trait DateFilter
     {
         // Fetch the totalCustomerOrdersAmount based on startDate and endDate filters
         $this->totalCustomerOrdersAmount = Order::where('status', '<>', 'CANCELED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
 
@@ -76,32 +76,34 @@ trait DateFilter
 
         // Fetch other data based on startDate and endDate filters...
         $this->totalCustomerOrders = Order::where('status', '<>', 'CANCELED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->count();
         $this->totalCustomerOrdersVolume = Order::where('status', '<>', 'CANCELED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->sum('volume');
 
         $this->totalConfirmedPayment = Payment::where('status', '=', 'CONFIRMED')
-            ->whereBetween('created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('payment_date', [$this->startDate, $this->endDate])
             ->sum('amount');
 
         $this->totalDebt = $this->totalCustomerOrdersAmount - $this->totalConfirmedPayment;
 
         $this->totalCustomerOrdersDeliveredAmount = Order::where('status', '=', 'DELIVERED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->select(DB::raw('SUM(volume * unit_price) AS total'))
             ->first();
         $this->totalCustomerOrdersDelivered = Order::where('status', '=', 'DELIVERED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->count();
+
         $this->totalCustomerOrdersDeliveredVolume = Order::where('status', '=', 'DELIVERED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->sum('volume');
+
         $this->deliveredOrdersBreakDownByProduct = Order::select('pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('SUM(pamtechoga_customer_orders.volume) as total'))
             ->join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
             ->where('status', '=', 'DELIVERED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->groupBy('product_id')
             ->get();
 
@@ -119,7 +121,7 @@ trait DateFilter
         $this->ordersBreakDownByProduct = Order::select('pamtechoga_customer_orders.product_id', 'pamtechoga_products.type', DB::raw('SUM(pamtechoga_customer_orders.volume) as total'))
             ->join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
             ->where('status', '<>', 'CANCELED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->groupBy('product_id')
             ->get();
 
@@ -169,7 +171,7 @@ trait DateFilter
             ->join('pamtechoga_products', 'pamtechoga_products.id', '=', 'pamtechoga_customer_orders.product_id')
             ->where('status', '=', 'DELIVERED')
             ->orWhere('status', '=', 'DISPATCHED')
-            ->whereBetween('pamtechoga_customer_orders.created_at', [$this->startDate, $this->endDate])
+            ->whereBetween('pamtechoga_customer_orders.order_date', [$this->startDate, $this->endDate])
             ->groupBy('product_id')
             ->get();
 

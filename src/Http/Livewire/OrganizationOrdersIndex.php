@@ -14,6 +14,7 @@ use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
+use Vibraniuum\Pamtechoga\Services\ConfirmPayment;
 use Vibraniuum\Pamtechoga\Traits\DateFilter;
 use Vibraniuum\Pamtechoga\Traits\DateFilterExtension;
 
@@ -49,6 +50,7 @@ class OrganizationOrdersIndex extends BaseIndex
             'unit_price' => 'Unit Price (NGN)',
             'amount' => 'Amount (NGN)',
             'profit' => 'Profit (NGN)',
+            'still_owing' => 'Still Owing?',
             'driver' => 'Driver',
             'status' => 'Status',
             'action' => 'Action',
@@ -58,6 +60,12 @@ class OrganizationOrdersIndex extends BaseIndex
     public function mainSearchColumn(): string|false
     {
         return 'product';
+    }
+
+    public function payFromCredit()
+    {
+        $organization = Organization::where('id', $this->organization)->first();
+        resolve(ConfirmPayment::class)->payFromCredit($organization);
     }
 
     public function render()
@@ -116,70 +124,6 @@ class OrganizationOrdersIndex extends BaseIndex
 
         return $query->paginate($this->perPage);
     }
-
-//    public function processBreakdown()
-//    {
-//        $organization = Organization::where('id', $this->organization)->first();
-//
-//        $status = 'CONFIRMED';
-//
-//        /**
-//         * BF-Debt (brought froward balance) = (SUM(orders amount before start date) - SUM(payments before start date))
-//         * payments = records within range of start date and end date
-//         * total = SUM(payments)
-//         * balance = BF - total
-//         */
-//
-//        $startDate = $this->startDate->startOfDay();
-//        $endDate = $this->endDate->endOfDay();
-//
-////        $endDate = Carbon::createFromFormat('Y-m-d', $this->endDate)->endOfDay();
-//
-//        // -----------------
-//        $sumOfOrdersAmountBeforeStartDate = Order::where('organization_id', $organization->id)
-//            ->where('status', '<>', 'CANCELED')
-//            ->where('pamtechoga_customer_orders.created_at', '<', $startDate)
-//            ->select(DB::raw('SUM(volume * unit_price) AS total'))
-//            ->first();
-//
-//        $sumOfPaymentsBeforeStartDate = Payment::where('organization_id', $organization->id)
-//            ->where('status', $status)
-//            ->where('created_at', '<', $startDate)
-//            ->sum('amount');
-//
-//        $this->bfDebt = max($sumOfOrdersAmountBeforeStartDate?->total - $sumOfPaymentsBeforeStartDate, 0);
-//
-//        $this->totalPaymentsWithinRange = Payment::where('organization_id', $organization->id)
-//            ->whereBetween('created_at', [$startDate, $endDate])
-//            ->where('status', $status)
-//            ->sum('amount');
-//
-//        $this->balance = max($this->bfDebt - $this->totalPaymentsWithinRange, 0);
-//        // -----------------
-//
-//        $this->payments = Payment::where('organization_id', $organization->id)
-//            ->whereBetween('created_at', [$startDate, $endDate])
-//            ->where('status', $status)
-//            ->orderBy('created_at', 'desc')
-//            ->with('organization')
-//            ->get();
-//
-//        $this->unverifiedPayments = Payment::where('organization_id', $organization->id)
-//            ->whereBetween('created_at', [$startDate, $endDate])
-//            ->where('status', '<>', $status)
-//            ->orderBy('created_at', 'desc')
-//            ->with('organization')
-//            ->get();
-//
-//
-////        return response()->json([
-////            'status' => true,
-////            'data' => $payments,
-////            'bf_debt' => $bfDebt ?? 0.0,
-////            'total' => $totalPaymentsWithinRange ?? 0.0,
-////            'balance' => $balance ?? 0.0,
-////        ]);
-//    }
 
     public function calculateProfit($depot_order_id, $unit_price, $trucking_expense, $volume)
     {
