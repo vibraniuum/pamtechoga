@@ -25,7 +25,6 @@ class CreatePamtechogaCustomerOrdersTable extends Migration
             $table->integer('driver_id')->nullable();
             $table->boolean('made_down_payment')->default(false);
             $table->boolean('payment_is_complete')->default(false);
-            $table->float('trucking_expense')->default(0);
             $table->json('meta')->nullable();
             $table->dateTime('payment_deadline')->nullable();
             $table->dateTime('created_at')->nullable();

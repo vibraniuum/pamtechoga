@@ -29,9 +29,7 @@ class OrdersForm extends Form
             'model.volume' => 'required',
             'model.unit_price' => 'required',
             'model.driver_id' => 'nullable',
-//            'model.made_down_payment' => 'required',
             'model.payment_deadline' => 'nullable',
-            'model.trucking_expense' => 'nullable',
         ];
     }
 
@@ -40,7 +38,6 @@ class OrdersForm extends Form
         $this->setModel($order);
         if (! $this->model->exists) {
             $this->model->status = 'PENDING';
-            $this->model->trucking_expense = 0.00;
         }
     }
 

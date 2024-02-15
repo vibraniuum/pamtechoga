@@ -159,13 +159,6 @@
                 @endforeach
             </x-fab::forms.select>
 
-            <x-fab::forms.input
-                wire:model="model.trucking_expense"
-                label="Trucking Expense (NGN)"
-                help="This is any extra cost incurred for delivering this order. E.g. Toll Gate Fee, Breakdown repair, etc."
-                :disabled="$model->status != 'PENDING' ? true : false"
-            />
-
         </x-fab::layouts.panel>
 
         <x-slot name="aside">
