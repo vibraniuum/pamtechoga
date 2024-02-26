@@ -89,7 +89,7 @@
                     <option
                         value="{{ $data->id }}"
                         {{ $this->isAssignedToAnotherOrder($data->id) ? 'disabled' : ''}}
-                    > - {{ Carbon::parse($data->date_loaded)->toFormattedDateString() }} - {{ $data->driver->name }} ({{ $data->driver->nickname }}) - Balance: {{ number_format($data->volume_balance) }} Litres {{ $this->isAssignedToAnotherOrder($data->id) }}</option>
+                    > - {{ Carbon::parse($data->date_loaded)->toFormattedDateString() }} - {{ $data->driver?->name }} ({{ $data->driver?->nickname }}) - Balance: {{ number_format($data->volume_balance) }} Litres {{ $this->isAssignedToAnotherOrder($data->id) }}</option>
                 @endforeach
             </x-fab::forms.select>
 
