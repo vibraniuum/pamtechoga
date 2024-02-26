@@ -73,7 +73,7 @@
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}"> - {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }}) | Balance: {{ number_format($this->balance($data->id)) }} LITRES</option>
+                    <option value="{{ $data->id }}"> {{ $data->status }} | {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }}) | Balance: {{ number_format($this->balance($data->id)) }} LITRES</option>
                 @endforeach
             </x-fab::forms.select>
 
