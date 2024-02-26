@@ -231,7 +231,7 @@ class OrdersForm extends Form
 
     public function allDepotOrders()
     {
-        return DepotOrder::where('status', 'LOADED')->where('status', 'UNLOADED')->orderBy('created_at', 'desc')->orWhere('id', $this->model->depot_order_id)->get();
+        return DepotOrder::where('status', 'LOADED')->orWhere('status', 'UNLOADED')->orderBy('created_at', 'desc')->orWhere('id', $this->model->depot_order_id)->get();
     }
 
     public function allProducts()
