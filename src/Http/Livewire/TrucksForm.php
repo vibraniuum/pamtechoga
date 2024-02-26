@@ -16,7 +16,6 @@ class TrucksForm extends Form
 //            'model.product_id' => 'required',
             'model.plate_number' => 'required',
             'model.volume_capacity' => 'required',
-            'model.available_volume' => 'required',
         ];
     }
 

@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     :title="$model?->depot?->name ?: 'Untitled'"
     :breadcrumbs="[
@@ -9,9 +12,27 @@
     x-on:keydown.meta.s.window.prevent="$wire.call('save')" {{-- For Mac --}}
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
-    <x-slot name="actions">
-        @include('lego::models._includes.forms.page-actions')
-    </x-slot>
+{{--    <x-slot name="actions">--}}
+{{--        @include('lego::models._includes.forms.page-actions')--}}
+{{--    </x-slot>--}}
+
+    @if($this->model->id)
+        <div>
+            <dl class=" grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                    <dt class="truncate text-sm font-medium text-gray-500">Unloaded Volume (Litres)</dt>
+                    <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($this->unloadedVolume()) }}</dd>
+                </div>
+
+                <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                    <dt class="truncate text-sm font-medium text-gray-500">Loaded Volume (Litres)</dt>
+                    <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($this->loadedVolume()) }}</dd>
+                </div>
+            </dl>
+        </div>
+        <div class="mt-5"></div>
+    @endif
+
     <x-lego::feedback.errors class="sh-mb-4"/>
 
     <x-fab::layouts.main-with-aside>
@@ -25,7 +46,8 @@
                     'dateFormat' => 'Y-m-d H:i',
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y | G:i K',
-                    'enableTime' => true
+                    'enableTime' => true,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
                 ]"
             />
 
@@ -33,6 +55,7 @@
                 wire:model="model.product_id"
                 label="Product"
                 help="This is the product being ordered."
+                :disabled="(bool) $this->model->id"
             >
                 <option value="0">-- Choose the Product</option>
                 @foreach($this->allProducts() as $data)
@@ -44,6 +67,7 @@
                 wire:model="model.depot_id"
                 label="Depot"
                 help="This is the depot the product is purchased from."
+                :disabled="(bool) $this->model->id"
             >
                 <option value="0">-- Choose the Organization</option>
                 @foreach($this->allDepots() as $data)
@@ -55,18 +79,21 @@
                 wire:model="model.volume"
                 label="Volume (Litre)"
                 help="This is the volume of selected product to be loaded."
+                :disabled="(bool) $this->model->id"
             />
 
             <x-fab::forms.input
                 wire:model="model.unit_price"
                 label="Price per litre"
                 help="This is currently automatically set from the selected product's market price but can be edited after negotiations."
+                :disabled="(bool) $this->model->id"
             />
 
             <x-fab::forms.input
                 wire:model="model.trucking_expense"
                 label="Trucking Expense (NGN)"
                 help="This is the cost per litre to transport the order volume."
+                :disabled="(bool) $this->model->id"
             />
 
         </x-fab::layouts.panel>
@@ -110,18 +137,12 @@
         </x-fab::layouts.panel>
 
         <x-slot name="aside">
-            <x-fab::forms.select
+            <x-fab::forms.input
                 wire:model="model.status"
                 label="Status"
-                help="This is the current status of this order."
-            >
-                <option value="PENDING">-- Choose Status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="PROCESSING">PROCESSING</option>
-                <option value="LOADED">LOADED</option>
-                <option value="UNLOADED">UNLOADED</option>
-                <option value="CANCELED">CANCELED</option>
-            </x-fab::forms.select>
+                help="This is the current status of this depot order."
+                disabled
+            />
 
             @include('pamtechoga::models.components.timestamp')
         </x-slot>

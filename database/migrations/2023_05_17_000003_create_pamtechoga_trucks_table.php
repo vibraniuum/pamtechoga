@@ -17,7 +17,6 @@ class CreatePamtechogaTrucksTable extends Migration
             $table->increments('id');
             $table->string('plate_number');
             $table->float('volume_capacity');
-            $table->float('available_volume')->default(0);
             $table->json('meta')->nullable();
             $table->text('chart')->nullable();
             $table->dateTime('created_at')->nullable();

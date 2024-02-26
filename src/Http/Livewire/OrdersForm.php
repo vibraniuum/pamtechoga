@@ -6,6 +6,7 @@ use Helix\Lego\Http\Livewire\Models\Form;
 use Vibraniuum\Pamtechoga\Events\OrderUpdated;
 use Vibraniuum\Pamtechoga\Models\Branch;
 use Vibraniuum\Pamtechoga\Models\DepotOrder;
+use Vibraniuum\Pamtechoga\Models\DepotPickup;
 use Vibraniuum\Pamtechoga\Models\Driver;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\OrderDebt;
@@ -17,11 +18,14 @@ class OrdersForm extends Form
 {
     protected bool $canBeViewed = false;
 
+    public $allDepotPickups = [];
+
     public function rules()
     {
         return [
             'model.order_date' => 'nullable',
             'model.depot_order_id' => 'nullable',
+            'model.depot_pickup_id' => 'required',
             'model.product_id' => 'required',
             'model.status' => 'required',
             'model.organization_id' => 'required',
@@ -38,6 +42,49 @@ class OrdersForm extends Form
         $this->setModel($order);
         if (! $this->model->exists) {
             $this->model->status = 'PENDING';
+        }
+
+        if ($this->model->depot_order_id) {
+            $depotOrder = DepotOrder::find($this->model->depot_order_id);
+            if ($depotOrder) {
+                $this->model->product_id = $depotOrder->product_id;
+                $this->allDepotPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'LOADED')->get();
+
+                $completedPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'COMPLETED');
+
+                $this->allDepotPickups = $this->allDepotPickups->merge($completedPickups);
+            }
+        }
+    }
+
+    public function isAssignedToAnotherOrder($depotPickupId)
+    {
+        $order = Order::where('depot_pickup_id', $depotPickupId)->first();
+        if ($order) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function deleting()
+    {
+        // reset pickup status
+        if ($this->model->depot_pickup_id) {
+            $depotPickup = DepotPickup::find($this->model->depot_pickup_id);
+            if ($depotPickup) {
+                $depotPickup->status = 'LOADED';
+                $depotPickup->save();
+            }
+        }
+
+        // reset depot order status
+        if ($this->model->depot_order_id) {
+            $depotOrder = DepotOrder::find($this->model->depot_order_id);
+            if ($depotOrder) {
+                $depotOrder->status = 'LOADED';
+                $depotOrder->save();
+            }
         }
     }
 
@@ -62,6 +109,31 @@ class OrdersForm extends Form
     public function model(): string
     {
         return Order::class;
+    }
+
+    public function setProduct()
+    {
+        if ($this->model->depot_order_id) {
+            $depotOrder = DepotOrder::find($this->model->depot_order_id);
+            if ($depotOrder) {
+                $this->model->product_id = $depotOrder->product_id;
+                $this->allDepotPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'LOADED')->get();
+
+                $completedPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'COMPLETED');
+
+                $this->allDepotPickups = $this->allDepotPickups->merge($completedPickups);
+            }
+        }
+    }
+
+    public function setDriver()
+    {
+        if ($this->model->depot_pickup_id) {
+            $depotPickup = DepotPickup::find($this->model->depot_pickup_id);
+            if ($depotPickup) {
+                $this->model->driver_id = $depotPickup->driver->id;
+            }
+        }
     }
 
     public function calculateValue($type)
@@ -122,14 +194,44 @@ class OrdersForm extends Form
 
     public function markAsDelivered()
     {
-        $this->model->status = 'DELIVERED';
-        $this->model->save();
-        $this->confetti();
+        if ($this->model->depot_pickup_id) {
+            $depotPickup = DepotPickup::find($this->model->depot_pickup_id);
+            if ($depotPickup) {
+                $depotPickup->status = 'COMPLETED';
+                $depotPickup->volume_balance = 0;
+                $depotPickup->save();
+
+                $this->model->status = 'DELIVERED';
+                $this->model->save();
+                $this->confetti();
+            }
+        }
+
+        // set depot order status to 'COMPLETED' if all pickups are completed
+        // and if all pickups volumes balance is 0
+        // and volume equals the depot order volume
+        $depotOrder = DepotOrder::find($this->model->depot_order_id);
+        if ($depotOrder) {
+            $depotOrderPickups = DepotPickup::where('depot_order_id', $depotOrder->id)->get();
+            $completedPickups = $depotOrderPickups->where('status', 'COMPLETED');
+            $completedPickupsVolumes = $completedPickups->sum('volume_assigned');
+            if ($completedPickupsVolumes == $depotOrder->volume) {
+                $depotOrder->status = 'COMPLETED';
+                $depotOrder->save();
+            }
+        }
+    }
+
+    public function balance($depotOrderId)
+    {
+        $loadedVolume = DepotPickup::where('depot_order_id', $depotOrderId)->where('status', 'LOADED')->sum('volume_assigned');
+
+        return $loadedVolume;
     }
 
     public function allDepotOrders()
     {
-        return DepotOrder::orderBy('created_at', 'desc')->get();
+        return DepotOrder::where('status', 'LOADED')->orderBy('created_at', 'desc')->orWhere('id', $this->model->depot_order_id)->get();
     }
 
     public function allProducts()

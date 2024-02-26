@@ -7,6 +7,7 @@ use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\AnnouncementsIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\BranchesIndex;
+use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrderBreakdown;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersForm;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotOrdersIndex;
 use Vibraniuum\Pamtechoga\Http\Livewire\DepotPickupsCreate;
@@ -135,6 +136,7 @@ Route::group([
         Route::get('/', DepotOrdersIndex::class)->name('index');
         Route::get('/create', DepotOrdersForm::class)->name('create');
         Route::get('/{depotOrder}/edit', DepotOrdersForm::class)->name('edit');
+        Route::get('/{depotOrder}/breakdown', DepotOrderBreakdown::class)->name('breakdown');
     });
 
     Route::group([

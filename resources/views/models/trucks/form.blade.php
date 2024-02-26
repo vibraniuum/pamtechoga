@@ -40,12 +40,6 @@
                 help="The full capacity of the truck."
             />
 
-            <x-fab::forms.input
-                wire:model="model.available_volume"
-                label="Available Volume (Litres)"
-                help="This is the volume of product left inside the truck."
-            />
-
         </x-fab::layouts.panel>
 
         <x-slot name="aside">

@@ -94,4 +94,9 @@ class Driver extends LegoModel implements Searchable, Mediable
     {
        return $this->belongsTo(Truck::class);
     }
+
+    public function depotPickups()
+    {
+         return $this->hasMany(DepotPickup::class);
+    }
 }

@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     :title="'Untitled'"
     :breadcrumbs="[
@@ -9,6 +12,26 @@
     x-on:keydown.meta.s.window.prevent="$wire.call('save')" {{-- For Mac --}}
     x-on:keydown.ctrl.s.window.prevent="$wire.call('save')" {{-- For PC  --}}
 >
+
+    @if(isset($this->model['depot_order_id']))
+        <div>
+            <dl class=" grid grid-cols-1 gap-4 sm:grid-cols-3">
+                <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                    <dt class="truncate text-sm font-medium text-gray-500">Unloaded Volume (Litres)</dt>
+                    <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($this->unloadedVolume()) }}</dd>
+                </div>
+
+                <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
+                    <dt class="truncate text-sm font-medium text-gray-500">New Loaded Volume (Litres)</dt>
+                    <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($this->newloadedVolume()) }}</dd>
+                </div>
+            </dl>
+        </div>
+        <div class="mt-5"></div>
+    @endif
+
+    <x-lego::feedback.errors class="sh-mb-4" />
+
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
@@ -19,34 +42,9 @@
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->depot->name }} - {{ $data->volume }}(LITRES) </option>
+                    <option value="{{ $data->id }}"> {{ $data->order_date }} | {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES) | NGN{{ number_format($data->unit_price + $data->trucking_expense) }}/LITRE </option>
                 @endforeach
             </x-fab::forms.select>
-
-            <x-fab::forms.select
-                wire:model="model.status"
-                label="Status"
-                help="This is the current status of this pickup."
-            >
-                <option value="PENDING">-- Choose Status</option>
-                <option value="PENDING">PENDING</option>
-                <option value="PROCESSING">PROCESSING</option>
-                <option value="LOADED">LOADED</option>
-                <option value="UNLOADED">UNLOADED</option>
-                <option value="CANCELED">CANCELED</option>
-            </x-fab::forms.select>
-
-            <x-fab::forms.date-picker
-                wire:model="model.pickup_datetime"
-                label="Date for pickup"
-                help="This is the datetime product should be picked up."
-                :options="[
-                    'dateFormat' => 'Y-m-d H:i',
-                    'altInput' => true,
-                    'altFormat' => 'D, M J, Y | G:i K',
-                    'enableTime' => true
-                ]"
-            />
 
             <x-fab::forms.date-picker
                 wire:model="model.loaded_datetime"
@@ -56,7 +54,8 @@
                     'dateFormat' => 'Y-m-d H:i',
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y | G:i K',
-                    'enableTime' => true
+                    'enableTime' => true,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
                 ]"
             />
 
@@ -66,27 +65,47 @@
 
             @foreach($extraData as $data)
 
-                <x-fab::forms.select
-                    wire:model="extraData.{{ $loop->index }}.driver_id"
-                    label="Driver {{ $loop->index + 1 }}."
-                    help="This is the assigned driver to pickup the product."
-                >
-                    <option value="0">-- Choose Truck (can be assigned later)</option>
-                    @foreach($this->allDrivers() as $data)
-                        <option value="{{ $data->id }}"> {{ $data->name }} </option>
-                    @endforeach
-                </x-fab::forms.select>
+                <div class="grid grid-cols-5">
+                    <div class="col-span-4">
+                        <x-fab::forms.select
+                            wire:model="extraData.{{ $loop->index }}.driver_id"
+                            label="Driver {{ $loop->index + 1 }}."
+                            help="This is the assigned driver to pickup the product."
+                        >
+                            <option value="0">-- Choose Truck (can be assigned later)</option>
+                            @foreach($this->allDrivers($this->extraData[$loop->index]['driver_id']) as $data)
+                                <option value="{{ $data->id }}"> {{ $data->name }} </option>
+                            @endforeach
+                        </x-fab::forms.select>
 
-                <x-fab::forms.input
-                    wire:model="extraData.{{ $loop->index }}.volume_assigned"
-                    label="Volume Assigned"
-                    help="This is the volume assigned to the driver to pickup."
-                />
+                        <x-fab::forms.input
+                            wire:model="extraData.{{ $loop->index }}.volume_assigned"
+                            wire:keyUp="checkThatVolumeIsNotOutOfRange({{ $loop->index }})"
+                            label="Volume Assigned"
+                            help="This is the volume assigned to the driver to pickup."
+                            :disabled="$this->extraData[$loop->index]['driver_id'] == 0"
+                        />
+                        <div>
+                            @if (session()->has('message'))
+                                <div class="bg-pink-400">
+                                    {{ session('message') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+{{--                    <div class="mt-1 col-span-1">--}}
+{{--                        <x-fab::elements.button wire:click="removeDataRow" type="button">Remove</x-fab::elements.button>--}}
+{{--                    </div>--}}
+
+                </div>
 
             @endforeach
 
-                <x-fab::elements.button wire:click="addExtraData" type="button">Add New</x-fab::elements.button>
-
+            @if($this->model)
+                @if(isset($this->model['depot_order_id']) && !$this->loadedVolumeIsOutOfRange())
+                    <x-fab::elements.button wire:click="addExtraData" type="button" class="mt-2">Add New</x-fab::elements.button>
+                @endif
+            @endif
         </x-fab::layouts.panel>
 
         <x-slot name="aside">

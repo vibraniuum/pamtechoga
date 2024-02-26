@@ -41,7 +41,11 @@ class DriversForm extends Form
 
     public function allTrucks()
     {
-        return Truck::all();
+        $trucks = Truck::whereDoesntHave('driver', function ($query) {
+            $query->where('id', '!=', null);
+        })->orWhere('id', $this->model->truck_id)->get();
+
+        return $trucks->unique('id');
     }
 
     public function saved()

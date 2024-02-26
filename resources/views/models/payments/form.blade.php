@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     :title="$model?->organization?->name ?: 'Untitled'"
     :breadcrumbs="[
@@ -50,6 +53,7 @@
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y | G:i K',
                     'enableTime' => true,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
                 ]"
             />
 
@@ -87,9 +91,9 @@
                     <x-fab::elements.button type="button" wire:click="markAsConfirmed">Mark as CONFIRMED</x-fab::elements.button>
                 @endif
 
-                @if($this->model->status === 'CONFIRMED')
-                    <x-fab::elements.button type="button" wire:click="markAsRefunded">Mark as REFUNDED</x-fab::elements.button>
-                @endif
+{{--                @if($this->model->status === 'CONFIRMED')--}}
+{{--                    <x-fab::elements.button type="button" wire:click="markAsRefunded">Mark as REFUNDED</x-fab::elements.button>--}}
+{{--                @endif--}}
             </div>
 
 {{--            <x-fab::forms.select--}}

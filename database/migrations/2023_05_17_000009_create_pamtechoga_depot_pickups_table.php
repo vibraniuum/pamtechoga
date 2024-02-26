@@ -19,7 +19,7 @@ class CreatePamtechogaDepotPickupsTable extends Migration
             $table->integer('driver_id');
             $table->enum('status', ['PENDING', 'PROCESSING', 'LOADED', 'UNLOADED', 'CANCELED'])->default('PENDING');
             $table->float('volume_assigned');
-            $table->dateTime('pickup_datetime');
+            $table->float('volume_balance');
             $table->dateTime('loaded_datetime');
             $table->json('meta')->nullable();
             $table->dateTime('created_at')->nullable();

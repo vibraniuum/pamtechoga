@@ -66,4 +66,9 @@ class DepotPickup extends LegoModel implements Searchable
     {
        return $this->belongsTo(Driver::class);
     }
+
+    public function order()
+    {
+       return $this->hasOne(Order::class);
+    }
 }

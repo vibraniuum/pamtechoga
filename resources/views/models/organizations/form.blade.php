@@ -1,3 +1,6 @@
+@php
+    use Carbon\Carbon;
+@endphp
 <x-fab::layouts.page
     :title="$model->name ?: 'Untitled'"
     :breadcrumbs="[
@@ -67,7 +70,8 @@
                     'dateFormat' => 'Y-m-d',
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y',
-                    'enableTime' => false
+                    'enableTime' => false,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
                 ]"
             />
 

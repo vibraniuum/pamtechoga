@@ -100,7 +100,8 @@
                 @endisset
 
                 <x-fab::lists.table.column align="right" slim>
-                <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">Edit</a>
+                <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">Edit</a>•
+                <a href="{{ route('lego.pamtechoga.depot-orders.breakdown', $data) }}">Breakdown</a>
                 </x-fab::lists.table.column>
             </x-fab::lists.table.row>
         @endforeach

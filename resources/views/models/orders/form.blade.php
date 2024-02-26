@@ -59,7 +59,8 @@
                     'dateFormat' => 'Y-m-d',
                     'altInput' => true,
                     'altFormat' => 'D, M J, Y',
-                    'enableTime' => false
+                    'enableTime' => false,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
                 ]"
             />
 
@@ -68,10 +69,27 @@
                 label="Depot Order"
                 help="This is the product price to fulfill this order."
                 :disabled="$model->depot_order_id ? true : false"
+                wire:change="setProduct"
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}"> - {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }})</option>
+                    <option value="{{ $data->id }}"> - {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->product->type }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES - NGN{{ number_format($data->unit_price) }} / LITRE - Trucking EXP: NGN{{ number_format($data->trucking_expense) }}) | Balance: {{ number_format($this->balance($data->id)) }} LITRES</option>
+                @endforeach
+            </x-fab::forms.select>
+
+            <x-fab::forms.select
+                wire:model="model.depot_pickup_id"
+                label="Driver/Pickup to Fulfill the Order"
+                help="This is the driver and pickup from the depot."
+                :disabled="$model->depot_pickup_id ? true : false"
+                wire:change="setDriver"
+            >
+                <option value="0">-- Choose Depot Pickup --</option>
+                @foreach($this->allDepotPickups as $data)
+                    <option
+                        value="{{ $data->id }}"
+                        {{ $this->isAssignedToAnotherOrder($data->id) ? 'disabled' : ''}}
+                    > - {{ Carbon::parse($data->date_loaded)->toFormattedDateString() }} - {{ $data->driver->name }} ({{ $data->driver->nickname }}) - Balance: {{ number_format($data->volume_balance) }} Litres {{ $this->isAssignedToAnotherOrder($data->id) }}</option>
                 @endforeach
             </x-fab::forms.select>
 
@@ -147,17 +165,12 @@
 
         <x-fab::layouts.panel>
 
-            <x-fab::forms.select
+            <x-fab::forms.input
                 wire:model="model.driver_id"
                 label="Driver"
-                help="This is the assigned driver to deliver the order. It can be ignored and assigned later."
-                :disabled="$model->status != 'PENDING' ? true : false"
-            >
-                <option value="0">-- Choose Truck (can be assigned later)</option>
-                @foreach($this->allDrivers() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->name }} </option>
-                @endforeach
-            </x-fab::forms.select>
+                help="This is the assigned driver to deliver the order. You can change the driver by changing the depot pickup order."
+                :disabled="true"
+            />
 
         </x-fab::layouts.panel>
 
@@ -193,7 +206,7 @@
                     <x-fab::elements.button type="button" wire:click="markAsDelivered">Mark as DELIVERED</x-fab::elements.button>
                 @endif
 
-                @if($this->model->status === 'DISPATCHED' && $this->model->id)
+                @if($this->model->status === 'DISPATCHED' && $this->model->id && $this->model->depot_pickup_id)
                     <x-fab::elements.button type="button" wire:click="markAsDelivered">Mark as DELIVERED</x-fab::elements.button>
                 @endif
             </div>
