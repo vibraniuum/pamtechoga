@@ -15,6 +15,8 @@ class PaymentsForm extends Form
 {
     protected bool $canBeViewed = false;
 
+    public $formattedAmount = 0;
+
     public function rules()
     {
         return [
@@ -26,7 +28,14 @@ class PaymentsForm extends Form
             'model.amount' => 'required',
             'model.payment_date' => 'required',
             'model.reference_description' => 'nullable',
+            'formattedAmount' => 'required',
         ];
+    }
+
+    public function updatedFormattedAmount()
+    {
+        $amount = (float) str_replace(',', '', $this->formattedAmount);
+        $this->model->amount = $amount;
     }
 
 //    public function updated($name, $value)
@@ -43,6 +52,8 @@ class PaymentsForm extends Form
         $this->setModel($payment);
 
         $this->model->user_id = 1;
+
+        $this->formattedAmount = number_format($this->model->amount);
     }
 
     public function saving()

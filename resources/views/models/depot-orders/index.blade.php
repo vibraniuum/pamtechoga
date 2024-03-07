@@ -77,7 +77,7 @@
 
                 @if($this->shouldShowColumn('volume'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">{{ $data->volume }}</a>
+                        <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">{{ number_format($data->volume) }}</a>
                     </x-fab::lists.table.column>
                 @endif
 
@@ -89,7 +89,7 @@
 
                 @if($this->shouldShowColumn('unit_price'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">{{ $data->unit_price }}</a>
+                        <a href="{{ route('lego.pamtechoga.depot-orders.edit', $data) }}">{{ number_format($data->unit_price) }}</a>
                     </x-fab::lists.table.column>
                 @endif
 

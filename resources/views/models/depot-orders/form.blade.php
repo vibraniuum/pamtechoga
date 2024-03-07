@@ -76,17 +76,21 @@
             </x-fab::forms.select>
 
             <x-fab::forms.input
-                wire:model="model.volume"
+                wire:model="formattedVolume"
                 label="Volume (Litre)"
                 help="This is the volume of selected product to be loaded."
                 :disabled="(bool) $this->model->id"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
 
             <x-fab::forms.input
-                wire:model="model.unit_price"
+                wire:model="formattedUnitPrice"
                 label="Price per litre"
                 help="This is currently automatically set from the selected product's market price but can be edited after negotiations."
                 :disabled="(bool) $this->model->id"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
 
             <x-fab::forms.input

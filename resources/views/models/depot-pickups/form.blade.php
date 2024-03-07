@@ -29,7 +29,7 @@
             >
                 <option value="0">-- Choose Depot Order --</option>
                 @foreach($this->allDepotOrders() as $data)
-                    <option value="{{ $data->id }}"> {{ $data->id }} - {{ $data->depot->name }} - {{ $data->volume }}(LITRES) </option>
+                    <option value="{{ $data->id }}"> {{ Carbon::parse($data->order_date)->toFormattedDateString() }} - {{ $data->depot->name }} - {{ number_format($data->volume) }}(LITRES) </option>
                 @endforeach
             </x-fab::forms.select>
 

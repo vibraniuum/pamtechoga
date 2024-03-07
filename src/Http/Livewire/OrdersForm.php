@@ -2,6 +2,7 @@
 
 namespace Vibraniuum\Pamtechoga\Http\Livewire;
 
+use Carbon\Carbon;
 use Helix\Lego\Http\Livewire\Models\Form;
 use Vibraniuum\Pamtechoga\Events\OrderUpdated;
 use Vibraniuum\Pamtechoga\Models\Branch;
@@ -20,6 +21,9 @@ class OrdersForm extends Form
 
     public $allDepotPickups = [];
 
+    public $formattedVolume = 0;
+    public $formattedUnitPrice = 0;
+
     public function rules()
     {
         return [
@@ -34,7 +38,21 @@ class OrdersForm extends Form
             'model.unit_price' => 'required',
             'model.driver_id' => 'nullable',
             'model.payment_deadline' => 'nullable',
+            'formattedVolume' => 'required',
+            'formattedUnitPrice' => 'required',
         ];
+    }
+
+    public function updatedFormattedVolume()
+    {
+        $volume = (float) str_replace(',', '', $this->formattedVolume);
+        $this->model->volume = $volume;
+    }
+
+    public function updatedFormattedUnitPrice()
+    {
+        $unitPrice = (float) str_replace(',', '', $this->formattedUnitPrice);
+        $this->model->unit_price = $unitPrice;
     }
 
     public function mount($order = null)
@@ -47,6 +65,10 @@ class OrdersForm extends Form
         if ($this->model->depot_order_id) {
             $depotOrder = DepotOrder::find($this->model->depot_order_id);
             if ($depotOrder) {
+                // set formatted volume and unit price
+                $this->formattedVolume = number_format($depotOrder->volume);
+                $this->formattedUnitPrice = number_format($depotOrder->unit_price);
+
                 $this->model->product_id = $depotOrder->product_id;
                 $this->allDepotPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'LOADED')->get();
 
@@ -232,6 +254,16 @@ class OrdersForm extends Form
     public function allDepotOrders()
     {
         return DepotOrder::where('status', 'LOADED')->orWhere('status', 'UNLOADED')->orderBy('created_at', 'desc')->orWhere('id', $this->model->depot_order_id)->get();
+    }
+
+    public function allDepotOrdersForCombobox()
+    {
+        return DepotOrder::where('status', 'LOADED')->orWhere('status', 'UNLOADED')->orderBy('created_at', 'desc')->orWhere('id', $this->model->depot_order_id)->get()->map(fn (DepotOrder $data) => [
+            'key' => $data->id,
+//            'value' => $data->volume,
+            'value' => $data->status . '|' . Carbon::parse($data->order_date)->toFormattedDateString() . '-' . $data->product->type . '-' . $data->depot->name . '-' . number_format($data->volume) . '(NGN' . number_format($data->unit_price) . '/ LITRE) | Balance: ' . number_format($this->balance($data->id)) . 'LITRES',
+            'selected' => $data->depot_order_id === $this->model->depot_order_id,
+        ])->toArray();
     }
 
     public function allProducts()

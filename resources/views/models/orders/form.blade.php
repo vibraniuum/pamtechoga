@@ -51,6 +51,11 @@
     <x-fab::layouts.main-with-aside>
         <x-fab::layouts.panel>
 
+{{--            <x-fab::forms.combobox--}}
+{{--                componentKey="depotOrderKey"--}}
+{{--                :items="$this->allDepotOrdersForCombobox()"--}}
+{{--            ></x-fab::forms.combobox>--}}
+
             <x-fab::forms.date-picker
                 wire:model="model.order_date"
                 label="Date of Order"
@@ -130,17 +135,20 @@
             </x-fab::forms.select>
 
             <x-fab::forms.input
-                wire:model="model.volume"
+                wire:model="formattedVolume"
                 label="Volume (Litre)"
                 help="This is the volume of selected product to be delivered."
                 :disabled="$model->status != 'PENDING' ? true : false"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
-
             <x-fab::forms.input
-                wire:model="model.unit_price"
+                wire:model="formattedUnitPrice"
                 label="Price per litre (NGN)"
                 help="This is automatically set from the selected product's market price but can be edited after negotiations."
                 :disabled="$model->status != 'PENDING' ? true : false"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
 
             <x-fab::forms.date-picker

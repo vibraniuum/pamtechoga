@@ -16,6 +16,9 @@ class DepotOrdersForm extends Form
 {
     protected bool $canBeViewed = false;
 
+    public $formattedVolume = 0;
+    public $formattedUnitPrice = 0;
+
     public function rules()
     {
         return [
@@ -26,6 +29,8 @@ class DepotOrdersForm extends Form
             'model.unit_price' => 'required',
             'model.trucking_expense' => 'required',
             'model.order_date' => 'required',
+            'formattedVolume' => 'required',
+            'formattedUnitPrice' => 'required',
         ];
     }
 
@@ -35,7 +40,22 @@ class DepotOrdersForm extends Form
 
         if (is_null($depotOrder)) {
             $this->model->status = 'UNLOADED';
+        } else {
+            $this->formattedVolume = number_format($this->model->volume);
+            $this->formattedUnitPrice = number_format($this->model->unit_price);
         }
+    }
+
+    public function updatedFormattedVolume()
+    {
+        $volume = (float) str_replace(',', '', $this->formattedVolume);
+        $this->model->volume = $volume;
+    }
+
+    public function updatedFormattedUnitPrice()
+    {
+        $unitPrice = (float) str_replace(',', '', $this->formattedUnitPrice);
+        $this->model->unit_price = $unitPrice;
     }
 
     public function unloadedVolume()

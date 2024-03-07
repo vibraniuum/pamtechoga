@@ -38,10 +38,12 @@
 
         <x-fab::layouts.panel>
             <x-fab::forms.input
-                wire:model="model.amount"
+                wire:model="formattedAmount"
                 label="Amount (NGN)"
                 help="Total value of this payment."
                 :disabled="$model->id ? true : false"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
 
             <x-fab::forms.date-picker
