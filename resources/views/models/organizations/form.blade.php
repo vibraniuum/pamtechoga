@@ -80,7 +80,7 @@
         <x-fab::layouts.panel title="Balance Brought Forward Record">
             <x-fab::forms.input
                 wire:model="formattedBFAmount"
-                label="BF Amount"
+                label="BF Amount (NGN)"
                 help="This is the amount owed at the given date."
 {{--                :disabled="$model->exists"--}}
                 x-data
@@ -89,7 +89,7 @@
 
             <x-fab::forms.input
 {{--                wire:model="formattedBFBalance"--}}
-                label="BF Balance"
+                label="BF Balance (NGN)"
                 value="{{ number_format($this->getBalance()) }}"
                 help="This is the balance remaining to be paid."
                 :disabled="true"

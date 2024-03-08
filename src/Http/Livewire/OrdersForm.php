@@ -62,12 +62,15 @@ class OrdersForm extends Form
             $this->model->status = 'PENDING';
         }
 
+        if ($this->model->exists) {
+            // set formatted volume and unit price
+            $this->formattedVolume = number_format($this->model->volume);
+            $this->formattedUnitPrice = number_format($this->model->unit_price);
+        }
+
         if ($this->model->depot_order_id) {
             $depotOrder = DepotOrder::find($this->model->depot_order_id);
             if ($depotOrder) {
-                // set formatted volume and unit price
-                $this->formattedVolume = number_format($depotOrder->volume);
-                $this->formattedUnitPrice = number_format($depotOrder->unit_price);
 
                 $this->model->product_id = $depotOrder->product_id;
                 $this->allDepotPickups = DepotPickup::where('depot_order_id', $this->model->depot_order_id)->where('status', 'LOADED')->get();
