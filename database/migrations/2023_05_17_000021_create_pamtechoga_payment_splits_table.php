@@ -16,7 +16,8 @@ class CreatePamtechogaPaymentSplitsTable extends Migration
         Schema::create('pamtechoga_payment_splits', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('payment_id');
-            $table->integer('order_id');
+            $table->integer('order_id')->nullable();
+            $table->integer('bf_organization_id')->nullable();
             $table->double('amount', 16, 4);
             $table->enum('status', ['SPLIT', 'REFUNDED'])->default('SPLIT');
             $table->dateTime('created_at')->default(now());

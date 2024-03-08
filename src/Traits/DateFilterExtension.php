@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Vibraniuum\Pamtechoga\Models\Order;
 use Vibraniuum\Pamtechoga\Models\DepotOrder;
 use Vibraniuum\Pamtechoga\Models\DepotPickup;
+use Vibraniuum\Pamtechoga\Models\PaymentSplit;
 use Vibraniuum\Pamtechoga\Models\Product;
 use Vibraniuum\Pamtechoga\Models\Organization;
 use Vibraniuum\Pamtechoga\Models\Driver;
@@ -87,6 +88,22 @@ trait DateFilterExtension
             ->sum('amount');
 
         $this->bfDebt = max($sumOfOrdersAmountBeforeStartDateForBF?->total - $sumOfPaymentsBeforeStartDateForBF, 0);
+
+        ///////////////////////
+
+        $bfFromOrganizationRecord = $organization->bf_amount;
+
+        $startDate = $this->startDate;
+        $endDate = $this->endDate;
+        $splitPaymentForOrganizationBf = PaymentSplit::where('bf_organization_id', $organization->id)
+            ->whereHas('payment', function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('payment_date', [$startDate, $endDate]);
+            })
+            ->sum('amount');
+
+        $this->bfDebt = $this->bfDebt + ($bfFromOrganizationRecord - $splitPaymentForOrganizationBf);
+
+        ////////////////////
 
         $this->totalPaymentsWithinRange = Payment::where('organization_id', $organization->id)
             ->whereBetween('payment_date', [$this->startDate, $this->endDate])

@@ -20,6 +20,11 @@
         <dl class="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-3">
             @php
                 $debt = \Vibraniuum\Pamtechoga\Models\OrderDebt::sum('balance');
+                $totalBfAmount = \Vibraniuum\Pamtechoga\Models\Organization::sum('bf_amount');
+
+                $splitPaymentForOrganizationBf = \Vibraniuum\Pamtechoga\Models\PaymentSplit::where('bf_organization_id', '<>', null)->sum('amount');
+
+                $debt = $debt + ($totalBfAmount - $splitPaymentForOrganizationBf);
             @endphp
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">Total Organizations Debts Amount</dt>
@@ -61,7 +66,7 @@
 
                 @if($this->shouldShowColumn('type'))
                     <x-fab::lists.table.column>
-                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ $data->type }}</a>
+                        <a href="{{ route('lego.pamtechoga.payments.edit', $data) }}">{{ $data->type === 'DEBT' ? 'DOWN PAYMENT' : $data->type }}</a>
                     </x-fab::lists.table.column>
                 @endif
 

@@ -13,6 +13,7 @@ use Vibraniuum\Pamtechoga\Models\Organization;
 use Helix\Lego\Models\User;
 use Vibraniuum\Pamtechoga\Models\OrganizationUser;
 use Vibraniuum\Pamtechoga\Models\Payment;
+use Vibraniuum\Pamtechoga\Models\PaymentSplit;
 use Vibraniuum\Pamtechoga\Models\Review;
 use Vibraniuum\Pamtechoga\Models\SupportMessage;
 
@@ -25,6 +26,9 @@ class OrganizationsForm extends Form
     public array $selectedBranchesIds = [];
 
     public SupportCollection $branches;
+
+    public $formattedBFAmount = 0;
+    public $formattedBFBalance = 0;
 
     protected $listeners = [
         'updateBranchesOrder',
@@ -40,7 +44,26 @@ class OrganizationsForm extends Form
             'model.contact_person_name' => 'nullable',
             'model.contact_person_phone' => 'nullable',
             'model.contact_person_dob' => 'nullable',
+            'model.bf_amount' => 'nullable',
+//            'model.bf_balance' => 'nullable',
+            'model.bf_date' => 'nullable',
         ];
+    }
+
+    public function updatedFormattedBFAmount()
+    {
+        $amount = (float) str_replace(',', '', $this->formattedBFAmount);
+        $this->model->bf_amount = $amount;
+    }
+
+    public function getBalance()
+    {
+        if ($this->model->id) {
+            $splitsTotal = PaymentSplit::where('bf_organization_id', $this->model->id)->sum('amount');
+            return $this->model->bf_amount - $splitsTotal;
+        }
+
+        return 0;
     }
 
     public function mount($organization = null)
@@ -53,6 +76,10 @@ class OrganizationsForm extends Form
         }
 
         $this->branches = collect($this->model->branches ?? []);
+
+        if ($this->model->exists) {
+            $this->formattedBFAmount = number_format($this->model->bf_amount);
+        }
 //
 //        $this->selectedProducts = $this->model->products;
 //        $this->selectedProductsIds = $this->selectedProducts->map(fn ($product) => $product->id)->toArray();

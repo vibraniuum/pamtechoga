@@ -142,6 +142,7 @@
                 x-data
                 x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
             />
+
             <x-fab::forms.input
                 wire:model="formattedUnitPrice"
                 label="Price per litre (NGN)"

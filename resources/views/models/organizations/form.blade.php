@@ -77,6 +77,40 @@
 
         </x-fab::layouts.panel>
 
+        <x-fab::layouts.panel title="Balance Brought Forward Record">
+            <x-fab::forms.input
+                wire:model="formattedBFAmount"
+                label="BF Amount"
+                help="This is the amount owed at the given date."
+{{--                :disabled="$model->exists"--}}
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
+            />
+
+            <x-fab::forms.input
+{{--                wire:model="formattedBFBalance"--}}
+                label="BF Balance"
+                value="{{ number_format($this->getBalance()) }}"
+                help="This is the balance remaining to be paid."
+                :disabled="true"
+                x-data
+                x-on:input="isNaN(parseFloat($event.target.value.replace(/,/g, ''))) ? $event.target.value = 0 : $event.target.value = parseFloat($event.target.value.replace(/,/g, '')).toLocaleString('en-US')"
+            />
+
+            <x-fab::forms.date-picker
+                wire:model="model.bf_date"
+                label="Date of Balance Brought Forward"
+                :options="[
+                    'dateFormat' => 'Y-m-d',
+                    'altInput' => true,
+                    'altFormat' => 'D, M J, Y',
+                    'enableTime' => false,
+                    'maxDate' => Carbon::now()->format('Y-m-d')
+                ]"
+            />
+
+        </x-fab::layouts.panel>
+
         <x-fab::layouts.panel
             title="Branches"
             description="Below are the branches created and assigned to this organization."

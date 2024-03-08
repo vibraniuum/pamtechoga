@@ -21,7 +21,24 @@
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
                 <dt class="truncate text-sm font-medium text-gray-500">All Time Debt Owed</dt>
-                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format(\Vibraniuum\Pamtechoga\Models\OrderDebt::where('organization_id', $this->organization)->sum('balance')) }}</dd>
+                @php
+                    $totalDebtOwed = \Vibraniuum\Pamtechoga\Models\OrderDebt::where('organization_id', $this->organization)->sum('balance');
+
+                    $organization = \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first();
+
+                    $bfFromOrganizationRecord = $organization->bf_amount;
+
+                    $startDate = $this->startDate;
+                    $endDate = $this->endDate;
+                    $splitPaymentForOrganizationBf = \Vibraniuum\Pamtechoga\Models\PaymentSplit::where('bf_organization_id', $organization->id)
+                        ->whereHas('payment', function ($query) use ($startDate, $endDate) {
+                            $query->whereBetween('payment_date', [$startDate, $endDate]);
+                        })
+                        ->sum('amount');
+
+                    $totalDebtOwed = $totalDebtOwed + ($bfFromOrganizationRecord - $splitPaymentForOrganizationBf);
+                @endphp
+                <dd class="mt-1 text-xl font-semibold tracking-tight text-gray-900">{{ number_format($totalDebtOwed) }}</dd>
             </div>
 
             <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
@@ -65,7 +82,7 @@
         <div class="mt-8 text-xl font-semibold tracking-tight text-gray-900">{{ \Vibraniuum\Pamtechoga\Models\Organization::where('id', $this->organization)->first()->name }}'s Orders for: {{ \Illuminate\Support\Carbon::make($startDate)->toFormattedDateString() }} - {{ \Illuminate\Support\Carbon::make($endDate)->toFormattedDateString() }}</div>
 
         <div class="mt-4 flex justify-end">
-            <x-fab::elements.button type="button" wire:click="exportAsCSV">Export data as CSV</x-fab::elements.button>
+{{--            <x-fab::elements.button type="button" wire:click="exportAsCSV">Export data as CSV</x-fab::elements.button>--}}
         </div>
     </div>
 
@@ -312,7 +329,7 @@
                             {{ \Illuminate\Support\Carbon::make($data->payment_date)->toFormattedDateString() }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $data->type }}
+                            {{ $data->type === 'DEBT' ? 'DOWN PAYMENT' : $data->type }}
                         </td>
                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                             @if($data->type === 'CREDIT')

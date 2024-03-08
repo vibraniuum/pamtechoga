@@ -12,8 +12,17 @@ use Vibraniuum\Pamtechoga\Models\PaymentSplit;
 class ConfirmPayment
 {
     // algorithm
+    // check if organization's split payments total is less than organization bf_amount
+    //     if true
+    //         if payment amount > (bf_amount - split payments total) AKA bf_balance
+    //             payment amount = payment amount - bf_balance
+    //             create split record with bf_balance
+    //         else
+    //             create split record with payment amount
+    //             payment amount = 0
+
     // orders = get all incomplete orders
-    // if payment <= 0 : return
+    // if payment amount <= 0 : return
     // for each order
     // if order debt balance <= payment
     //      create split record
@@ -22,11 +31,11 @@ class ConfirmPayment
     //      set order debt balance to 0
     // else
     //     create split record
-    //     order debt balance -= payment
-    //     payment = 0
+    //     order debt balance -= payment amount
+    //     payment amount = 0
     //     exit loop
     // end for
-    // if payment > 0
+    // if payment amount > 0
     //     update organization credit balance
     //     log credit balance
 
@@ -34,6 +43,28 @@ class ConfirmPayment
     {
         $paymentAmount = $payment->amount;
         $organizationId = $payment->organization_id;
+
+        $splitsTotal = PaymentSplit::where('bf_organization_id', $organizationId)->sum('amount');
+        $organization = Organization::where('id', $organizationId)->first();
+        $bfBalance = $organization->bf_amount - $splitsTotal;
+
+        if($bfBalance > 0) {
+            if($paymentAmount > $bfBalance) {
+                $paymentAmount = $paymentAmount - $bfBalance;
+                PaymentSplit::create([
+                    'payment_id' => $payment->id,
+                    'bf_organization_id' => $organizationId,
+                    'amount' => $bfBalance,
+                ]);
+            } else {
+                PaymentSplit::create([
+                    'payment_id' => $payment->id,
+                    'bf_organization_id' => $organizationId,
+                    'amount' => $paymentAmount,
+                ]);
+                $paymentAmount = 0;
+            }
+        }
 
         // get only incomplete orders
         $orders = Order::where('organization_id', $organizationId)
@@ -83,8 +114,6 @@ class ConfirmPayment
         }
 
         if ($paymentAmount > 0) {
-            $organization = Organization::where('id', $organizationId)->first();
-
             // log credit balance
             CreditLog::create([
                 'organization_id' => $organizationId,
